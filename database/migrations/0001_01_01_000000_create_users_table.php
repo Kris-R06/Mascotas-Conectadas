@@ -18,6 +18,11 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+            $table->foreignId('tipo_user_id')->constrained()->cascadeOnDelete();
+            $table->string('telefono');
+            $table->string('direccion');
+            $table->boolean('has_yard')->default(false);    
+            $table->boolean('kids')->default(false);      
             $table->timestamps();
         });
 
