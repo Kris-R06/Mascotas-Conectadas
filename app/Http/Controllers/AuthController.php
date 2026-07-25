@@ -12,33 +12,29 @@ class AuthController extends Controller
         return view('auth.auth');
     }
 
-    public function register()
+    public function register(\Illuminate\Http\Request $request)
     {
-        $validatedData = request()->validate([
+        // 1. Validamos solo los campos de texto
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'telefono' => 'required|string|max:12',
+            'telefono' => 'required|string|max:13|min:10',
             'direccion' => 'required|string|max:255',
-            'has_yard' => 'required|boolean',
-            'kids' => 'required|boolean',
-            'tipo_user_id' => 'default:1',
             'password' => 'required|string|min:8|confirmed',
-            'password_confirmation' => 'required|string|min:8',
         ]);
-        #crear usuario
+
+        // 2. Creamos al usuario de forma segura
         $user = \App\Models\User::create([
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
             'password' => bcrypt($validatedData['password']),
-            'username' => $validatedData['email'],
             'telefono' => $validatedData['telefono'],
             'direccion' => $validatedData['direccion'],
-            'has_yard' => $validatedData['has_yard'],
-            'kids' => $validatedData['kids'],
-            'tipo_user_id' => $validatedData['tipo_user_id'],
-            'user_type' => 'user',
+            'has_yard' => $request->has('has_yard'),
+            'kids' => $request->has('kids'),
+            'tipo_user_id' => 1, 
         ]);
-        #redirigir después de registrarse
+
         Auth::login($user);
         return redirect()->route('home');
     }

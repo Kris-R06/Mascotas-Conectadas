@@ -21,8 +21,8 @@
                 <div class="w-full grid grid-cols-2 gap-4">
                     <input type="text" name="name" placeholder="Nombre completo" class="w-full bg-slate-100 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
                     <input type="email" name="email" placeholder="Correo electrónico" class="w-full bg-slate-100 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
-                    <input type="tel" name="phone" placeholder="Teléfono" class="w-full bg-slate-100 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
-                    <input type="text" name="address" placeholder="Dirección" class="w-full bg-slate-100 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                    <input type="tel" name="telefono" placeholder="Teléfono" class="w-full bg-slate-100 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                    <input type="text" name="direccion" placeholder="Dirección" class="w-full bg-slate-100 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
                     <input type="password" name="password" placeholder="Contraseña" class="w-full bg-slate-100 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
                     <input type="password" name="password_confirmation" placeholder="Confirmar contraseña" class="w-full bg-slate-100 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
                 </div>
@@ -33,11 +33,22 @@
                         Tengo patio amplio
                     </label>
                     <label class="flex items-center gap-2 cursor-pointer hover:text-indigo-600 transition-colors">
-                        <input type="checkbox" name="has_kids" value="1" class="accent-indigo-500 w-4 h-4">
+                        <input type="checkbox" name="kids" value="1" class="accent-indigo-500 w-4 h-4">
                         Tengo niños en casa
                     </label>
                 </div>
-
+                
+                <!-- 
+                @if ($errors->any())
+                    <div class="mt-4 w-full bg-red-100 text-red-700 p-3 rounded-lg">
+                        <ul class="list-disc list-inside">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                -->
                 <button type="submit" class="mt-8 bg-indigo-500 text-white font-bold py-3 px-12 rounded-full hover:bg-indigo-600 transition-colors shadow-lg">Registrarse</button>
             </form>
         </div>
@@ -61,14 +72,14 @@
             <div id="overlay-left" class="absolute inset-0 flex flex-col items-center justify-center p-10 text-center transition-transform duration-700 ease-in-out -translate-x-full">
                 <i class="ph ph-dog text-6xl mb-4"></i>
                 <h2 class="text-3xl font-bold mb-4">¡Bienvenido de nuevo!</h2>
-                <p class="mb-8 font-light text-indigo-100">Para seguir interactuando con la comunidad y el mapa de calor, por favor inicia sesión con tus datos personales.</p>
+                <p class="mb-8 font-light text-indigo-100">Para seguir interactuando con la comunidad y el mapa, por favor inicia sesión con tus datos personales.</p>
                 <button id="signInBtn" class="border-2 border-white text-white font-bold py-2 px-8 rounded-full hover:bg-white hover:text-indigo-500 transition-colors">Iniciar Sesión</button>
             </div>
 
             <div id="overlay-right" class="absolute inset-0 flex flex-col items-center justify-center p-10 text-center transition-transform duration-700 ease-in-out translate-x-0">
                 <i class="ph ph-cat text-6xl mb-4"></i>
                 <h2 class="text-3xl font-bold mb-4">¿Nuevo aquí?</h2>
-                <p class="mb-8 font-light text-indigo-100">Regístrate, cuéntanos tu estilo de vida y ayúdanos a hacer el match perfecto entre personas y mascotas.</p>
+                <p class="mb-8 font-light text-indigo-100">Regístrate y ayúdanos a hacer el match perfecto entre personas y mascotas.</p>
                 <button id="signUpBtn" class="border-2 border-white text-white font-bold py-2 px-8 rounded-full hover:bg-white hover:text-indigo-500 transition-colors">Registrarse</button>
             </div>
         </div>
