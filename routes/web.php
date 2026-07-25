@@ -17,6 +17,7 @@ Route::get('/login', [AuthController::class, 'loginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
 Route::resource('tipo-users', TipoUserController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 Route::resource('especies', EspecieController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 Route::resource('tipo-reportes', TipoReporteController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
