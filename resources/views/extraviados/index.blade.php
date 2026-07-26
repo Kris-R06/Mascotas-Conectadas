@@ -91,7 +91,7 @@
                                         </button>
                                     </form>
                                 @else
-                                    <a href="#" class="w-full flex justify-center items-center gap-2 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 font-bold py-2.5 px-4 rounded-xl transition-colors text-sm">
+                                    <a href="{{ route('extraviados.show', $reporte->id) }}" class="w-full flex justify-center items-center gap-2 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 font-bold py-2.5 px-4 rounded-xl transition-colors text-sm">
                                         <i class="ph ph-eye text-lg"></i> Ver detalles
                                     </a>
                                 @endif

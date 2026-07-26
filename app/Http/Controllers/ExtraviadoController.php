@@ -73,6 +73,24 @@ class ExtraviadoController extends Controller
     }
 
     /**
+     * Muestra el detalle de una mascota extraviada y sus avistamientos de la comunidad.
+     */
+    public function show(Reporte $reporte)
+    {
+        $reporte->load(['mascota.especie', 'user']);
+
+        // Avistamientos vinculados a esta mascota
+        $avistamientos = Reporte::query()
+            ->with('user')
+            ->where('tipo_reporte_id', 2) // 2 = Avistamiento
+            ->where('mascota_id', $reporte->mascota_id)
+            ->latest('fecha')
+            ->get();
+
+        return view('extraviados.show', compact('reporte', 'avistamientos'));
+    }
+
+    /**
      * Muestra el formulario para editar un reporte de extravío.
      */
     public function edit(Reporte $reporte)
