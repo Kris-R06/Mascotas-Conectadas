@@ -11,6 +11,9 @@ sleep 3
 
 # Migraciones 
 php artisan migrate --force
+php artisan db:seed
+composer require barryvdh/laravel-dompdf
+php artisan storage:link
 
 # cachear configuración
 php artisan config:clear
