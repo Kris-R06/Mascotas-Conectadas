@@ -16,7 +16,8 @@ class AvistamientoController extends Controller
     {
         $query = Reporte::query()
             ->with(['tipo_reporte', 'mascota.especie', 'user'])
-            ->where('tipo_reporte_id', 2); // 2 = Avistamiento
+            ->where('tipo_reporte_id', 2) // 2 = Avistamiento
+            ->whereNull('mascota_id');     // Solo avistamientos independientes / no vinculados como pista a una mascota extraviada
 
         if ($request->get('filter') === 'mis_publicaciones') {
             $query->where('user_id', auth()->id());
