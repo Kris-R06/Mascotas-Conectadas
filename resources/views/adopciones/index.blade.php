@@ -1,7 +1,7 @@
 @extends('layout.admin')
 @section('content')
 
-<div class="w-full flex-grow bg-white p-6 md:p-10 font-sans">
+<div class="w-full flex-grow bg-white p-6 md:p-10 font-sans overflow-y-auto">
     
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4 border-b border-slate-100 pb-6">
         <div>
