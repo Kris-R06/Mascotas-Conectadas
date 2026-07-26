@@ -26,19 +26,18 @@
                 </p>
 
                 <!-- Botones de Acción Rápida con Enlaces Directos -->
-                <div class="flex flex-wrap items-center gap-3 pt-2">
-                    <a href="{{ route('extraviados.create') }}" class="bg-rose-500 hover:bg-rose-600 text-white px-5 py-3 rounded-xl font-bold shadow-lg shadow-rose-900/20 transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4">
+                    <a href="{{ route('extraviados.create') }}" class="w-full bg-rose-500 hover:bg-rose-600 text-white px-5 py-3 rounded-xl font-bold shadow-lg shadow-rose-900/20 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 min-h-[56px]">
                         <i class="ph-bold ph-warning-circle text-xl"></i>
                         Reportar Extravío
                     </a>
                     
-                    <a href="{{ route('avistamientos.create') }}" class="bg-amber-500 hover:bg-amber-600 text-white px-5 py-3 rounded-xl font-bold shadow-lg shadow-amber-900/20 transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
+                    <a href="{{ route('avistamientos.create') }}" class="w-full bg-amber-500 hover:bg-amber-600 text-white px-5 py-3 rounded-xl font-bold shadow-lg shadow-amber-900/20 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 min-h-[56px]">
                         <i class="ph-bold ph-binoculars text-xl"></i>
                         Publicar Avistamiento
                     </a>
                     
-                    <a href="{{ route('adopciones.index') }}" class="bg-white/10 hover:bg-white/20 border border-white/30 text-white backdrop-blur-md px-5 py-3 rounded-xl font-semibold transition-all flex items-center gap-2">
-                    <a href="{{ route('adopciones.index') }}" class="bg-white/10 hover:bg-white/20 border border-white/30 text-white backdrop-blur-md px-5 py-3 rounded-xl font-semibold transition-all flex items-center gap-2">
+                    <a href="{{ route('adopciones.index') }}" class="w-full bg-white/10 hover:bg-white/20 border border-white/30 text-white backdrop-blur-md px-5 py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 min-h-[56px]">
                         <i class="ph-bold ph-heart text-xl"></i>
                         Explorar Adopciones
                     </a>
