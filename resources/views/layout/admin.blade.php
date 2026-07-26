@@ -35,6 +35,11 @@
                     <i class="ph ph-binoculars text-xl"></i>
                     Avistamientos
                 </a>
+                <a href="{{ route('perfil.index') }}" 
+                class="flex items-center gap-3 px-4 py-3 {{ request()->routeIs('perfil.*') ? 'text-blue-900 bg-blue-50 border border-blue-100 shadow-sm' : 'text-slate-500 hover:text-blue-700 hover:bg-blue-50/70' }} rounded-lg font-medium transition-colors">
+                    <i class="ph ph-user-circle text-xl"></i>
+                    Mi Perfil
+                </a>
             </nav>
             
             <!-- Menú secundario inferior en el sidebar -->

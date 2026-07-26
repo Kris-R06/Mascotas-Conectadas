@@ -9,6 +9,7 @@ use App\Http\Controllers\TipoUserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PerfilController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -70,5 +71,9 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/tipo-users/{tipoUser}', [TipoUserController::class, 'update'])->name('tipo-users.update');
     Route::delete('/tipo-users/{tipoUser}', [TipoUserController::class, 'destroy'])->name('tipo-users.destroy');
 
+    // Rutas De Perfil
+    Route::get('/perfil', [PerfilController::class, 'index'])->name('perfil.index');
+    Route::get('/perfil/editar', [PerfilController::class, 'edit'])->name('perfil.edit');
+    Route::patch('/perfil', [PerfilController::class, 'update'])->name('perfil.update');
 });
 
