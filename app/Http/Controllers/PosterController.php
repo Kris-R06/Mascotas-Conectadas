@@ -50,19 +50,9 @@ class PosterController extends Controller
             }
         }
 
-        // ===== URL del QR apuntando a la publicación pública del reporte de extravío =====
-        $tipoExtravio = \App\Models\TipoReporte::where('nombre', 'Extravío')->first();
-        $reporte = \App\Models\Reporte::where('mascota_id', $mascota->id)
-            ->when($tipoExtravio, function ($q) use ($tipoExtravio) {
-                $q->where('tipo_reporte_id', $tipoExtravio->id);
-            })
-            ->latest('fecha')
-            ->first();
-
-        $destUrl = $reporte ? route('extraviados.show', $reporte->id) : route('extraviados.index');
-
+        // ===== URL del QR (misma API que en show.blade) =====
         $qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' 
-                . urlencode($destUrl);
+                . urlencode(route('mascotas.show', $mascota->id));
 
         $pdf = Pdf::loadView('mascotas.poster', compact('mascota', 'fotoBase64', 'qrUrl'))
             ->setPaper('letter', 'portrait')
