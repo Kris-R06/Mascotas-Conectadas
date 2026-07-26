@@ -80,9 +80,16 @@
 
                             <div class="mt-auto pt-4 border-t border-slate-50 flex items-center gap-2">
                                 @if($reporte->user_id == auth()->id())
-                                    <a href="{{ route('extraviados.edit', $reporte->id) }}" class="w-full flex justify-center items-center gap-2 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 font-bold py-2.5 px-4 rounded-xl transition-colors text-sm">
-                                        <i class="ph ph-pencil-simple text-lg"></i> Editar Publicación
+                                    <a href="{{ route('extraviados.edit', $reporte->id) }}" class="flex-1 flex justify-center items-center gap-1.5 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 font-bold py-2.5 px-3 rounded-xl transition-colors text-xs">
+                                        <i class="ph ph-pencil-simple text-base"></i> Editar
                                     </a>
+                                    <form action="{{ route('extraviados.destroy', $reporte->id) }}" method="POST" onsubmit="return confirm('¿Deseas eliminar este reporte de extravío?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="bg-rose-50 hover:bg-rose-600 hover:text-white text-rose-700 font-bold p-2.5 rounded-xl transition-colors text-xs" title="Eliminar Alerta">
+                                            <i class="ph ph-trash text-base"></i>
+                                        </button>
+                                    </form>
                                 @else
                                     <a href="#" class="w-full flex justify-center items-center gap-2 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 font-bold py-2.5 px-4 rounded-xl transition-colors text-sm">
                                         <i class="ph ph-eye text-lg"></i> Ver detalles

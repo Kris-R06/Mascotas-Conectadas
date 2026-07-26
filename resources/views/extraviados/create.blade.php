@@ -91,9 +91,6 @@
                                 <p class="text-xs text-slate-400">Escribe la calle/colonia para ver sugerencias o haz clic en el mapa</p>
                             </div>
                         </div>
-                        <span id="map-coords-badge" class="hidden sm:inline-block text-xs font-mono text-blue-700 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
-                            Lat: 25.8690, Lng: -97.5027
-                        </span>
                     </div>
 
                     <!-- Buscador Autocompletado en Tiempo Real -->

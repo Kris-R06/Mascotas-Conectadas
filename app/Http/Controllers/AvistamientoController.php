@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Reporte;
 use App\Models\Mascota;
 use Illuminate\Http\Request;
+use App\Models\Especie;
 
 class AvistamientoController extends Controller
 {
@@ -32,7 +33,8 @@ class AvistamientoController extends Controller
     public function create()
     {
         $mascotas = Mascota::with('especie')->get();
-        return view('avistamientos.create', compact('mascotas'));
+        $especies = Especie::all();
+        return view('avistamientos.create', compact('mascotas', 'especies'));
     }
 
     /**
@@ -77,7 +79,8 @@ class AvistamientoController extends Controller
     public function edit(Reporte $reporte)
     {
         $mascotas = Mascota::with('especie')->get();
-        return view('avistamientos.edit', compact('reporte', 'mascotas'));
+        $especies = Especie::all();
+        return view('avistamientos.edit', compact('reporte', 'mascotas', 'especies'));
     }
 
     /**
