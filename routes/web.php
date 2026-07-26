@@ -22,13 +22,12 @@ Route::get('/', function () {
     Route::get('/extraviados', [ExtraviadoController::class, 'index'])->name('extraviados.index');
     Route::get('/avistamientos', [AvistamientoController::class, 'index'])->name('avistamientos.index');
     Route::get('/home', [HomeController::class, 'index'])->name('home');
-    
+    Route::get('/mascotas/{mascota}', [MascotaController::class, 'show'])->name('mascotas.show');
 
 Route::middleware(['guest'])->group(function () {
     Route::get('/login', [AuthController::class, 'loginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/register', [AuthController::class, 'register'])->name('register');
-    Route::get('/mascotas/{mascota}', [MascotaController::class, 'show'])->name('mascotas.show');
 });
 
 Route::middleware(['auth'])->group(function () {
