@@ -63,6 +63,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/extraviados/{reporte}/edit', [ExtraviadoController::class, 'edit'])->name('extraviados.edit');
     Route::put('/extraviados/{reporte}', [ExtraviadoController::class, 'update'])->name('extraviados.update');
     Route::delete('/extraviados/{reporte}', [ExtraviadoController::class, 'destroy'])->name('extraviados.destroy');
+    Route::get('/extraviados/{reporte}', [ExtraviadoController::class, 'show'])->name('extraviados.show');
 
     // Rutas de Avistamientos (AvistamientoController)
     Route::get('/avistamientos', [AvistamientoController::class, 'index'])->name('avistamientos.index');
