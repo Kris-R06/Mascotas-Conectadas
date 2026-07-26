@@ -170,14 +170,13 @@
             </tr>
         </table>
 
-        <!-- Contenedor de Descripción -->
         <div class="descripcion-box">
             <p class="descripcion-titulo">Descripción</p>
             <p class="descripcion-texto">{{ $mascota->descripcion }}</p>
         </div>
 
         <div class="contacto">
-            <p class="contacto-titulo">Si la ves, contáctanos:</p>
+            <p class="contacto-titulo">Si lo ves, contáctanos:</p>
             <p class="contacto-dato">{{ $mascota->user->name }}</p>
             <p class="contacto-dato">Tel: {{ $mascota->user->telefono }}</p>
 
