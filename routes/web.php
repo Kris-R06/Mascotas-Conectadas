@@ -48,7 +48,8 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/mascotas/{mascota}', [MascotaController::class, 'destroy'])->name('mascotas.destroy');
 
     // Rutas de Reportes
-    Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes.index');
+    Route::get('/extraviados', [ReporteController::class, 'indexExtraviados'])->name('extraviados.index');
+    Route::get('/avistamientos', [ReporteController::class, 'indexAvistamientos'])->name('avistamientos.index');
     Route::get('/reportes/create', [ReporteController::class, 'create'])->name('reportes.create');
     Route::post('/reportes', [ReporteController::class, 'store'])->name('reportes.store');
     Route::get('/reportes/{reporte}/edit', [ReporteController::class, 'edit'])->name('reportes.edit');

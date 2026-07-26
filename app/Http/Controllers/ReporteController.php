@@ -7,14 +7,29 @@ use Illuminate\Http\Request;
 
 class ReporteController extends Controller
 {
-    public function index()
+    public function indexExtraviados()
     {
         $reportes = Reporte::query()
             ->with(['tipo_reporte', 'mascota', 'user'])
+            ->where('tipo_reporte_id', 1) // 1 = Extravío
             ->latest('fecha')
             ->get();
 
-        return view('reportes.index', compact('reportes'));
+        // Te enviará a resources/views/extraviados/index.blade.php
+        return view('extraviados.index', compact('reportes'));
+    }
+
+    // Método para cargar SOLO los avistamientos (Tipo 2)
+    public function indexAvistamientos()
+    {
+        $reportes = Reporte::query()
+            ->with(['tipo_reporte', 'mascota', 'user'])
+            ->where('tipo_reporte_id', 2) // 2 = Avistamiento
+            ->latest('fecha')
+            ->get();
+
+        // Te enviará a resources/views/avistamientos/index.blade.php
+        return view('avistamientos.index', compact('reportes'));
     }
 
     public function create()
