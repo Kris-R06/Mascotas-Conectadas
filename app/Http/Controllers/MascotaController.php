@@ -10,12 +10,11 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Especie;
 use Illuminate\Support\Facades\Storage;
 
-
 class MascotaController extends Controller
 {
     public function index()
     {
-        $mascotas = \App\Models\Mascota::with('especie')
+        $mascotas = Mascota::with('especie')
                     ->where('user_id', Auth::id())
                     ->latest()
                     ->get();
@@ -24,13 +23,27 @@ class MascotaController extends Controller
     }
 
     public function create()
-    {    $especies = \App\Models\Especie::all();
-        
+    {
+        if (Especie::count() === 0) {
+            Especie::firstOrCreate(['id' => 1], ['nombre' => 'Perro']);
+            Especie::firstOrCreate(['id' => 2], ['nombre' => 'Gato']);
+            Especie::firstOrCreate(['id' => 3], ['nombre' => 'Ave']);
+            Especie::firstOrCreate(['id' => 4], ['nombre' => 'Otro']);
+        }
+
+        $especies = Especie::all();
         return view('mascotas.create', compact('especies'));
     }
 
     public function store(Request $request)
     {
+        if (Especie::count() === 0) {
+            Especie::firstOrCreate(['id' => 1], ['nombre' => 'Perro']);
+            Especie::firstOrCreate(['id' => 2], ['nombre' => 'Gato']);
+            Especie::firstOrCreate(['id' => 3], ['nombre' => 'Ave']);
+            Especie::firstOrCreate(['id' => 4], ['nombre' => 'Otro']);
+        }
+
         $validated = $request->validate([
             'nombre'       => 'required|string|max:255',
             'especie_id'   => 'required|exists:especies,id',
@@ -41,39 +54,40 @@ class MascotaController extends Controller
             'estatus'      => 'required|in:safe,adopcion,extraviado',
             'descripcion'  => 'nullable|string',
             'descripción'  => 'nullable|string',
-            'foto'         => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'energy_level' => 'required|integer|min:1|max:10',
+            'foto'         => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'energy_level' => 'nullable|integer|min:1|max:10',
         ]);
 
-        $validated['descripcion'] = $validated['descripcion'] ?? $validated['descripción'] ?? '';
+        // Asignación de valores por defecto para evitar NOT NULL Constraint Violation si los campos vienen vacíos
+        $validated['raza']         = !empty($validated['raza']) ? $validated['raza'] : 'Mestizo';
+        $validated['color']        = !empty($validated['color']) ? $validated['color'] : 'No especificado';
+        $validated['tamaño']       = !empty($validated['tamaño']) ? $validated['tamaño'] : 'Mediano';
+        $validated['edad']         = !empty($validated['edad']) ? $validated['edad'] : 'No especificada';
+        $validated['descripcion']  = !empty($validated['descripcion']) ? $validated['descripcion'] : (!empty($validated['descripción']) ? $validated['descripción'] : 'Sin descripción adicional.');
         unset($validated['descripción']);
 
-        // 2. Procesamos y guardamos la foto si el usuario subió una
+        $validated['energy_level'] = $request->input('energy_level', 5);
+
         if ($request->hasFile('foto')) {
-            // Guarda la imagen en storage/app/public/mascotas
             $validated['foto'] = $request->file('foto')->store('mascotas', 'public');
+        } else {
+            $validated['foto'] = 'mascotas/default.jpg';
         }
 
-        // 3. Asignaciones automáticas (Datos que el usuario no escribe directamente)
-        $validated['user_id']      = Auth::id(); // Relacionamos la mascota con el usuario logueado
-        $validated['space_needed'] = $request->has('space_needed'); // Checkbox a Booleano
-        $validated['kid_friendly'] = $request->has('kid_friendly'); // Checkbox a Booleano
-        
-        // Generamos un identificador único para su futura placa QR (basado en tu BD)
-        $validated['qr'] = (string) Str::uuid(); 
+        $validated['user_id']      = Auth::id();
+        $validated['space_needed'] = $request->has('space_needed') ? 'Espacio amplio' : 'Espacio estándar';
+        $validated['kid_friendly'] = $request->has('kid_friendly');
+        $validated['qr']           = (string) Str::uuid(); 
 
-        // 4. ¡Guardamos en la base de datos!
         Mascota::create($validated);
 
-        // 5. Redirigimos al usuario a su lista de mascotas con un mensaje de éxito
         return redirect()->route('mascotas.index')
-                        ->with('success', '¡Mascota registrada con éxito a tu manada!');
+                        ->with('success', '¡Mascota registrada con éxito!');
     }
 
     public function show($id)
     {
-        // Buscamos la mascota y cargamos su relación con especie
-        $mascota = \App\Models\Mascota::with('especie')->findOrFail($id);
+        $mascota = Mascota::with('especie')->findOrFail($id);
         if ($mascota->user_id !== auth()->id()) {
             abort(403, 'No tienes permiso para ver esta mascota.');
         }
@@ -85,55 +99,54 @@ class MascotaController extends Controller
     {
         $mascota = Mascota::findOrFail($id);
         
-        // Proteger: asegurar que el usuario logueado sea el dueño
         if ($mascota->user_id !== auth()->id()) abort(403);
         
+        if (Especie::count() === 0) {
+            Especie::firstOrCreate(['id' => 1], ['nombre' => 'Perro']);
+            Especie::firstOrCreate(['id' => 2], ['nombre' => 'Gato']);
+        }
+
         $especies = Especie::all();
         return view('mascotas.edit', compact('mascota', 'especies'));
     }
 
     public function update(Request $request, Mascota $mascota)
     {
-        // 1. Capa de Seguridad: Evitar que alguien edite la mascota de otro usuario
         if ($mascota->user_id !== auth()->id()) {
             abort(403, 'No tienes permiso para editar esta mascota.');
         }
 
-        // 2. Validación adaptada exactamente a tu formulario HTML
         $validated = $request->validate([
             'nombre'       => ['required', 'string', 'max:255'],
             'especie_id'   => ['required', 'exists:especies,id'],
             'raza'         => ['nullable', 'string', 'max:255'],
             'color'        => ['nullable', 'string', 'max:255'],
-            'tamaño'       => ['nullable', 'string', 'max:255'], // En la vista envías 'Pequeño', 'Mediano', etc.
-            'edad'         => ['nullable', 'string', 'max:255'], // En la vista envías '2 meses', etc.
+            'tamaño'       => ['nullable', 'string', 'max:255'],
+            'edad'         => ['nullable', 'string', 'max:255'],
             'estatus'      => ['required', 'in:safe,adopcion,extraviado'],
             'descripcion'  => ['nullable', 'string'],
-            'foto'         => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'], // Ahora valida archivos reales
-            'energy_level' => ['required', 'integer', 'min:1', 'max:10'],
+            'foto'         => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
+            'energy_level' => ['nullable', 'integer', 'min:1', 'max:10'],
         ]);
 
-        // 3. Procesar las casillas (Checkboxes a Booleanos)
-        $validated['space_needed'] = $request->has('space_needed');
+        $validated['raza']         = !empty($validated['raza']) ? $validated['raza'] : 'Mestizo';
+        $validated['color']        = !empty($validated['color']) ? $validated['color'] : 'No especificado';
+        $validated['tamaño']       = !empty($validated['tamaño']) ? $validated['tamaño'] : 'Mediano';
+        $validated['edad']         = !empty($validated['edad']) ? $validated['edad'] : 'No especificada';
+        $validated['descripcion']  = !empty($validated['descripcion']) ? $validated['descripcion'] : 'Sin descripción adicional.';
+        $validated['space_needed'] = $request->has('space_needed') ? 'Espacio amplio' : 'Espacio estándar';
         $validated['kid_friendly'] = $request->has('kid_friendly');
+        $validated['energy_level'] = $request->input('energy_level', $mascota->energy_level ?? 5);
 
-        // 4. El "Hackathon Fix" de SQLite para la descripción
-        $validated['descripcion'] = $request->input('descripcion', 'Sin descripción adicional.');
-
-        // 5. Gestión avanzada de la foto
         if ($request->hasFile('foto')) {
-            // Si el usuario sube una FOTO NUEVA y ya tenía una antes, borramos la vieja del servidor para ahorrar espacio
-            if ($mascota->foto) {
+            if ($mascota->foto && $mascota->foto !== 'mascotas/default.jpg') {
                 Storage::disk('public')->delete($mascota->foto);
             }
-            // Guardamos la nueva foto
             $validated['foto'] = $request->file('foto')->store('mascotas', 'public');
         }
 
-        // 6. Actualizar la base de datos
         $mascota->update($validated);
 
-        // 7. Redirigir con mensaje de éxito
         return redirect()->route('mascotas.index')
                         ->with('success', '¡Perfil de ' . $mascota->nombre . ' actualizado con éxito!');
     }
@@ -142,20 +155,16 @@ class MascotaController extends Controller
     {
         $mascota = Mascota::findOrFail($id);
 
-        // 1. Capa de Seguridad: Verificar que la mascota sea del usuario autenticado
         if ($mascota->user_id !== auth()->id()) {
             abort(403, 'No tienes permiso para eliminar esta mascota.');
         }
 
-        // 2. Si la mascota tiene una foto subida, la eliminamos del almacenamiento
-        if ($mascota->foto) {
+        if ($mascota->foto && $mascota->foto !== 'mascotas/default.jpg') {
             Storage::disk('public')->delete($mascota->foto);
         }
 
-        // 3. Eliminamos el registro de la Base de Datos
         $mascota->delete();
 
-        // 4. Redirigimos a la lista de mascotas con un mensaje de confirmación
         return redirect()->route('mascotas.index')
                         ->with('success', 'La mascota ha sido eliminada correctamente.');
     }
