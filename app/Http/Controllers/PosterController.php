@@ -15,8 +15,6 @@ class PosterController extends Controller
         $mascota->load('user', 'especie');
 
         // ===== Convertir la foto local a base64 =====
-        // Esto evita el bug de dompdf en Windows donde rutas tipo "E:\..." 
-        // se interpretan mal como URLs cuando isRemoteEnabled está activo.
         $fotoBase64 = null;
         if ($mascota->foto) {
             $rutaFoto = public_path('storage/' . $mascota->foto);
@@ -34,7 +32,7 @@ class PosterController extends Controller
             }
         }
 
-        // ===== URL del QR (misma API que usas en show.blade) =====
+        // ===== URL del QR (misma API que en show.blade) =====
         $qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' 
                 . urlencode(route('mascotas.show', $mascota->id));
 
@@ -45,6 +43,6 @@ class PosterController extends Controller
         $nombreArchivo = 'poster-' . str($mascota->nombre)->slug() . '.pdf';
 
         return $pdf->stream($nombreArchivo); 
-        // Usa ->download($nombreArchivo) si prefieres forzar descarga en vez de vista previa
+        // Usa ->download($nombreArchivo) para forzar descarga en vez de vista previa
     }
 }
