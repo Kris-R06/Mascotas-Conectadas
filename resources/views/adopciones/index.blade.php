@@ -228,39 +228,71 @@
                         </label>
                     </div>
                 </div>
-
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 grid grid-cols-1 md:grid-cols-2 gap-6">
                     
                     <div>
-                        <h4 class="font-bold text-slate-800 mb-3 flex items-center gap-2 text-sm">
-                            <i class="ph ph-house-line text-amber-500 text-lg"></i> ¿Tienes patio/jardín?
-                        </h4>
-                        <div class="flex gap-3">
-                            <label class="flex-1 text-center p-2 border border-slate-200 rounded-xl cursor-pointer hover:bg-amber-50 has-[:checked]:border-amber-500 has-[:checked]:bg-amber-50 has-[:checked]:text-amber-700 font-semibold text-sm transition-all text-slate-600">
-                                <input type="radio" name="has_yard" value="1" class="hidden" required> Sí
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="font-bold text-slate-800 flex items-center gap-2 text-sm">
+                                <i class="ph ph-house-line text-amber-500 text-lg"></i> ¿Tienes patio/jardín?
+                            </h4>
+                            @auth
+                                <span class="text-[10px] bg-slate-100 text-slate-500 font-bold px-2 py-1 rounded-md flex items-center gap-1 border border-slate-200">
+                                    <i class="ph ph-lock-key text-xs text-amber-500"></i> De tu perfil
+                                </span>
+                            @endauth
+                        </div>
+
+                        @auth
+                            {{-- Extraemos el valor del usuario logueado --}}
+                            @php $userYard = auth()->user()->has_yard ? '1' : '0'; @endphp
+                            {{-- Campo oculto para asegurar que el formulario reciba el dato aunque los radios estén deshabilitados --}}
+                            <input type="hidden" name="has_yard" value="{{ $userYard }}">
+                        @endauth
+
+                        <div class="flex gap-3 @auth opacity-80 pointer-events-none select-none @endauth">
+                            <label class="flex-1 text-center p-2.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-amber-50 has-[:checked]:border-amber-500 has-[:checked]:bg-amber-50 has-[:checked]:text-amber-700 font-semibold text-sm transition-all text-slate-600">
+                                <input type="radio" name="has_yard" value="1" class="hidden" 
+                                    @auth {{ $userYard == '1' ? 'checked' : '' }} disabled @else required @endauth> Sí
                             </label>
-                            <label class="flex-1 text-center p-2 border border-slate-200 rounded-xl cursor-pointer hover:bg-amber-50 has-[:checked]:border-amber-500 has-[:checked]:bg-amber-50 has-[:checked]:text-amber-700 font-semibold text-sm transition-all text-slate-600">
-                                <input type="radio" name="has_yard" value="0" class="hidden"> No
+                            <label class="flex-1 text-center p-2.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-amber-50 has-[:checked]:border-amber-500 has-[:checked]:bg-amber-50 has-[:checked]:text-amber-700 font-semibold text-sm transition-all text-slate-600">
+                                <input type="radio" name="has_yard" value="0" class="hidden" 
+                                    @auth {{ $userYard == '0' ? 'checked' : '' }} disabled @endauth> No
                             </label>
                         </div>
                     </div>
 
                     <div>
-                        <h4 class="font-bold text-slate-800 mb-3 flex items-center gap-2 text-sm">
-                            <i class="ph ph-baby text-amber-500 text-lg"></i> ¿Hay niños en casa?
-                        </h4>
-                        <div class="flex gap-3">
-                            <label class="flex-1 text-center p-2 border border-slate-200 rounded-xl cursor-pointer hover:bg-amber-50 has-[:checked]:border-amber-500 has-[:checked]:bg-amber-50 has-[:checked]:text-amber-700 font-semibold text-sm transition-all text-slate-600">
-                                <input type="radio" name="has_kids" value="1" class="hidden" required> Sí
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="font-bold text-slate-800 flex items-center gap-2 text-sm">
+                                <i class="ph ph-baby text-amber-500 text-lg"></i> ¿Hay niños en casa?
+                            </h4>
+                            @auth
+                                <span class="text-[10px] bg-slate-100 text-slate-500 font-bold px-2 py-1 rounded-md flex items-center gap-1 border border-slate-200">
+                                    <i class="ph ph-lock-key text-xs text-amber-500"></i> De tu perfil
+                                </span>
+                            @endauth
+                        </div>
+
+                        @auth
+                            {{-- Verifica si el campo se llama has_kids o kids en el modelo User --}}
+                            @php $userKids = (auth()->user()->has_kids ?? auth()->user()->kids) ? '1' : '0'; @endphp
+                            {{-- Campo oculto para asegurar que el formulario reciba el dato --}}
+                            <input type="hidden" name="has_kids" value="{{ $userKids }}">
+                        @endauth
+
+                        <div class="flex gap-3 @auth opacity-80 pointer-events-none select-none @endauth">
+                            <label class="flex-1 text-center p-2.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-amber-50 has-[:checked]:border-amber-500 has-[:checked]:bg-amber-50 has-[:checked]:text-amber-700 font-semibold text-sm transition-all text-slate-600">
+                                <input type="radio" name="has_kids" value="1" class="hidden" 
+                                    @auth {{ $userKids == '1' ? 'checked' : '' }} disabled @else required @endauth> Sí
                             </label>
-                            <label class="flex-1 text-center p-2 border border-slate-200 rounded-xl cursor-pointer hover:bg-amber-50 has-[:checked]:border-amber-500 has-[:checked]:bg-amber-50 has-[:checked]:text-amber-700 font-semibold text-sm transition-all text-slate-600">
-                                <input type="radio" name="has_kids" value="0" class="hidden"> No
+                            <label class="flex-1 text-center p-2.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-amber-50 has-[:checked]:border-amber-500 has-[:checked]:bg-amber-50 has-[:checked]:text-amber-700 font-semibold text-sm transition-all text-slate-600">
+                                <input type="radio" name="has_kids" value="0" class="hidden" 
+                                    @auth {{ $userKids == '0' ? 'checked' : '' }} disabled @endauth> No
                             </label>
                         </div>
                     </div>
 
                 </div>
-
             </div>
         </form>
 

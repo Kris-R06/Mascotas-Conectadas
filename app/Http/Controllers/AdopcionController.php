@@ -6,7 +6,6 @@ use App\Models\Adopcion;
 use App\Models\Mascota;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use App\Models\Mascota;
 
 class AdopcionController extends Controller
 {

@@ -18,8 +18,8 @@ Route::get('/', function () {
 });
 
     Route::get('/adopciones', [AdopcionController::class, 'index'])->name('adopciones.index');
-    Route::get('/extraviados', [ReporteController::class, 'indexExtraviados'])->name('extraviados.index');
-    Route::get('/avistamientos', [ReporteController::class, 'indexAvistamientos'])->name('avistamientos.index');
+    Route::get('/extraviados', [ExtraviadoController::class, 'index'])->name('extraviados.index');
+    Route::get('/avistamientos', [AvistamientoController::class, 'index'])->name('avistamientos.index');
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::middleware(['guest'])->group(function () {
@@ -56,12 +56,6 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/mascotas/{mascota}', [MascotaController::class, 'update'])->name('mascotas.update');
     Route::delete('/mascotas/{mascota}', [MascotaController::class, 'destroy'])->name('mascotas.destroy');
 
-    // Rutas de Reportes
-    Route::get('/reportes/create', [ReporteController::class, 'create'])->name('reportes.create');
-    Route::post('/reportes', [ReporteController::class, 'store'])->name('reportes.store');
-    Route::get('/reportes/{reporte}/edit', [ReporteController::class, 'edit'])->name('reportes.edit');
-    Route::put('/reportes/{reporte}', [ReporteController::class, 'update'])->name('reportes.update');
-    Route::delete('/reportes/{reporte}', [ReporteController::class, 'destroy'])->name('reportes.destroy');
     // Rutas de Extraviados (ExtraviadoController)
     Route::get('/extraviados', [ExtraviadoController::class, 'index'])->name('extraviados.index');
     Route::get('/extraviados/create', [ExtraviadoController::class, 'create'])->name('extraviados.create');
@@ -102,6 +96,3 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/mascotas/{mascota}/poster', [PosterController::class, 'generar'])->name('mascotas.poster');
 });
 
-
-    Route::get('/mascotas/{mascota}/poster', [PosterController::class, 'generar'])->name('mascotas.poster');
-});
