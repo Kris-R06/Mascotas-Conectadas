@@ -17,6 +17,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+    Route::view('/contacto', 'contacto')->name('contacto');
     Route::get('/adopciones', [AdopcionController::class, 'index'])->name('adopciones.index');
     Route::get('/extraviados', [ExtraviadoController::class, 'index'])->name('extraviados.index');
     Route::get('/avistamientos', [AvistamientoController::class, 'index'])->name('avistamientos.index');

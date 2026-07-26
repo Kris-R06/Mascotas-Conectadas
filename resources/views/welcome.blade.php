@@ -64,6 +64,7 @@
                 <div class="flex items-center gap-5 text-sm font-medium text-navy/80">
                     <a href="#servicios" class="hover:text-sky transition-colors">Reportar extravío</a>
                     <a href="#como-funciona" class="hover:text-sky transition-colors">Cómo funciona</a>
+                    <a href="{{ route('contacto') }}" class="hover:text-sky transition-colors">Contactanos</a>
                 </div>
                 @auth
                     <a href="{{ route('home') }}" class="inline-flex items-center gap-2 bg-navy text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-navy/90 transition-colors shadow-sm shadow-navy/30">
@@ -233,8 +234,8 @@
             <div>
                 <p class="text-white font-semibold text-sm">Producto</p>
                 <ul class="mt-4 space-y-3 text-sm">
-                    <li><a href="#adoptar" class="hover:text-white transition-colors">Adoptar</a></li>
-                    <li><a href="#reportar-cta" class="hover:text-white transition-colors">Reportar extravío</a></li>
+                    <li><a href="{{ route('adopciones.index') }}" class="hover:text-white transition-colors">Adoptar</a></li>
+                    <li><a href="#servicios" class="hover:text-white transition-colors">Reportar extravío</a></li>
                     <li><a href="#servicios" class="hover:text-white transition-colors">Smart Matching</a></li>
                     <li><a href="#servicios" class="hover:text-white transition-colors">Mapa de búsqueda</a></li>
                 </ul>
@@ -245,15 +246,7 @@
                 <ul class="mt-4 space-y-3 text-sm">
                     <li><a href="#" class="hover:text-white transition-colors">Sobre nosotros</a></li>
                     <li><a href="#" class="hover:text-white transition-colors">Refugios aliados</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Contacto</a></li>
-                </ul>
-            </div>
-
-            <div>
-                <p class="text-white font-semibold text-sm">Legal</p>
-                <ul class="mt-4 space-y-3 text-sm">
-                    <li><a href="#" class="hover:text-white transition-colors">Privacidad</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Términos de uso</a></li>
+                    <li><a href="{{ route('contacto') }}" class="hover:text-white transition-colors">Contacto</a></li>
                 </ul>
             </div>
         </div>

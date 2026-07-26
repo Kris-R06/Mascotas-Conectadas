@@ -52,14 +52,18 @@
                     
                     <div class="bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-blue-50 flex flex-col relative group">
                         
-                        @if(isset($isSmartMatch) && $isSmartMatch)
-                            <div class="absolute top-4 left-4 z-10 bg-amber-500 text-white text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
-                                <i class="ph ph-star text-sm"></i> {{ 100 - abs($lifestyleScore - $adopcion->mascota->energy_level) * 10 }}% Match
-                            </div>
-                        @endif
+                        <div class="absolute top-4 right-4 z-10 flex flex-col gap-2 items-end">
+                            
+                            @if(isset($isSmartMatch) && $isSmartMatch)
+                                <div class="bg-amber-500 text-white text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
+                                    <i class="ph ph-star text-sm"></i> {{ 100 - abs($lifestyleScore - $adopcion->mascota->energy_level) * 10 }}% Match
+                                </div>
+                            @endif
 
-                        <div class="absolute top-4 right-4 z-10 bg-blue-600 text-white text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-full shadow-lg">
-                            En adopción
+                            <div class="bg-blue-600 text-white text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-full shadow-lg">
+                                En adopción
+                            </div>
+
                         </div>
 
                         <div class="relative h-56 w-full bg-slate-50 overflow-hidden">
