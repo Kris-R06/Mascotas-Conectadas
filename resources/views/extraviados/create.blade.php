@@ -89,13 +89,13 @@
                                     </div>
                                 </div>
                             @empty
-                                <div class="col-span-full bg-white border-2 border-dashed border-rose-200 rounded-2xl p-6 text-center space-y-3">
-                                    <i class="ph ph-siren text-4xl text-rose-500"></i>
-                                    <h3 class="text-sm font-bold text-slate-800">No tienes mascotas registradas como "Extraviadas"</h3>
-                                    <p class="text-xs text-slate-500 max-w-sm mx-auto">Para publicar una alerta de extravío, tu mascota debe tener el estatus <strong>"Extraviado (Se busca)"</strong> en su perfil.</p>
+                                <div class="col-span-full bg-white border-2 border-dashed border-blue-200 rounded-2xl p-6 text-center space-y-3">
+                                    <i class="ph ph-check-circle text-4xl text-emerald-500"></i>
+                                    <h3 class="text-sm font-bold text-slate-800">No hay mascotas pendientes por reportar</h3>
+                                    <p class="text-xs text-slate-500 max-w-sm mx-auto">Todas tus mascotas registradas ya cuentan con una alerta de extravío activa publicada o están a salvo en casa.</p>
                                     <div class="flex flex-wrap justify-center gap-3 pt-2">
-                                        <a href="{{ route('mascotas.index') }}" class="inline-flex items-center gap-2 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold py-2.5 px-5 rounded-full text-xs transition-all border border-blue-200">
-                                            <i class="ph ph-paw-print text-base"></i> Mis Mascotas
+                                        <a href="{{ route('extraviados.index') }}" class="inline-flex items-center gap-2 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold py-2.5 px-5 rounded-full text-xs transition-all border border-blue-200">
+                                            <i class="ph ph-siren text-base"></i> Ver Alertas Publicadas
                                         </a>
                                         <a href="{{ route('mascotas.create') }}" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-5 rounded-full text-xs transition-all shadow-sm">
                                             <i class="ph ph-plus-circle text-base"></i> Registrar Nueva Mascota

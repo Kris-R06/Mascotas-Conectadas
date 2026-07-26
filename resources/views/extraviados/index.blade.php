@@ -80,13 +80,16 @@
 
                             <div class="mt-auto pt-4 border-t border-slate-50 flex items-center gap-2">
                                 @if($reporte->user_id == auth()->id())
-                                    <a href="{{ route('extraviados.edit', $reporte->id) }}" class="flex-1 flex justify-center items-center gap-1.5 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 font-bold py-2.5 px-3 rounded-xl transition-colors text-xs">
-                                        <i class="ph ph-pencil-simple text-base"></i> Editar
+                                    <a href="{{ route('extraviados.show', $reporte->id) }}" class="flex-1 flex justify-center items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-3 rounded-xl transition-all text-xs shadow-sm">
+                                        <i class="ph ph-eye text-base"></i> Ver detalles
+                                    </a>
+                                    <a href="{{ route('extraviados.edit', $reporte->id) }}" class="bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold p-2.5 rounded-xl transition-colors text-xs flex items-center justify-center" title="Editar Alerta">
+                                        <i class="ph ph-pencil-simple text-base"></i>
                                     </a>
                                     <form action="{{ route('extraviados.destroy', $reporte->id) }}" method="POST" onsubmit="return confirm('¿Deseas eliminar este reporte de extravío?');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="bg-rose-50 hover:bg-rose-600 hover:text-white text-rose-700 font-bold p-2.5 rounded-xl transition-colors text-xs" title="Eliminar Alerta">
+                                        <button type="submit" class="bg-rose-50 hover:bg-rose-600 hover:text-white text-rose-700 font-bold p-2.5 rounded-xl transition-colors text-xs flex items-center justify-center" title="Eliminar Alerta">
                                             <i class="ph ph-trash text-base"></i>
                                         </button>
                                     </form>

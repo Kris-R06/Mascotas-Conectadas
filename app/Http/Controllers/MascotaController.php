@@ -147,6 +147,16 @@ class MascotaController extends Controller
 
         $mascota->update($validated);
 
+        // Si el estatus cambia a cualquier valor distinto de 'extraviado', eliminar el reporte de extravío activo
+        if ($validated['estatus'] !== 'extraviado') {
+            $tipoExtravio = \App\Models\TipoReporte::where('nombre', 'Extravío')->first();
+            if ($tipoExtravio) {
+                \App\Models\Reporte::where('mascota_id', $mascota->id)
+                    ->where('tipo_reporte_id', $tipoExtravio->id)
+                    ->delete();
+            }
+        }
+
         return redirect()->route('mascotas.index')
                         ->with('success', '¡Perfil de ' . $mascota->nombre . ' actualizado con éxito!');
     }
