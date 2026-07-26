@@ -3,31 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mascotas Conectadas</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-</head>
-<body class="bg-blue-50/30 text-slate-800 font-sans antialiased min-h-screen overflow-x-hidden">
+    <title>Panel — Mascotas Conectadas</title>
 
-    <div class="flex min-h-screen">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+
+{{-- Usamos Alpine.js (x-data) en el body para controlar el estado del menú --}}
+<body class="bg-blue-50/30 text-slate-800 font-sans antialiased min-h-screen overflow-x-hidden" x-data="{ sidebarOpen: false }">
+
+    <div class="md:hidden flex items-center justify-between bg-white border-b border-blue-100 px-6 py-4 sticky top-0 z-40">
+        <div class="flex items-center gap-2 font-bold text-blue-950 text-lg">
+            <i class="ph-fill ph-paw-print text-blue-500 text-2xl"></i>
+            Mascotas Conectadas
+        </div>
+        <button @click="sidebarOpen = true" class="text-slate-500 hover:text-blue-600 focus:outline-none">
+            <i class="ph ph-list text-3xl"></i>
+        </button>
+    </div>
+
+    <div class="flex min-h-screen relative">
         
-        <aside class="w-64 bg-white border-r border-blue-100 flex-shrink-0 flex flex-col justify-between overflow-y-auto hidden md:flex">
+        <div x-show="sidebarOpen" 
+             x-transition.opacity
+             @click="sidebarOpen = false"
+             class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden" 
+             x-cloak>
+        </div>
+
+        <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" 
+               class="fixed md:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-blue-100 flex-shrink-0 flex flex-col justify-between overflow-y-auto transition-transform duration-300 ease-in-out md:translate-x-0">
+            
             <nav class="p-4 space-y-2">
-                <a href="{{ route('home') }}" class="flex items-center gap-3 px-4 py-3 text-blue-900 bg-blue-50 rounded-lg font-semibold transition-colors border border-blue-100 shadow-sm">
-                    <i class="ph-fill ph-house text-xl text-blue-600"></i>
+                <div class="md:hidden flex justify-end mb-4">
+                    <button @click="sidebarOpen = false" class="text-slate-400 hover:text-red-500 p-2 bg-slate-50 rounded-full">
+                        <i class="ph ph-x text-xl"></i>
+                    </button>
+                </div>
+
+                <a href="{{ route('home') }}" class="flex items-center gap-3 px-4 py-3 {{ request()->routeIs('home') ? 'text-blue-900 bg-blue-50 border border-blue-100 shadow-sm' : 'text-slate-600 hover:text-blue-700 hover:bg-blue-50/70' }} rounded-lg font-semibold transition-colors">
+                    <i class="ph-fill ph-house text-xl {{ request()->routeIs('home') ? 'text-blue-600' : '' }}"></i>
                     Inicio
                 </a>
-                <a href="{{ route('adopciones.index') }}" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-blue-700 hover:bg-blue-50/70 rounded-lg font-medium transition-colors">
+                <a href="{{ route('adopciones.index') }}" class="flex items-center gap-3 px-4 py-3 {{ request()->routeIs('adopciones.*') ? 'text-blue-900 bg-blue-50 border border-blue-100 shadow-sm' : 'text-slate-600 hover:text-blue-700 hover:bg-blue-50/70' }} rounded-lg font-medium transition-colors">
                     <i class="ph ph-heart text-xl"></i>
                     Adopciones
                 </a>
-                <a href="{{ route('extraviados.index') }}" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-blue-700 hover:bg-blue-50/70 rounded-lg font-medium transition-colors">
+                <a href="{{ route('extraviados.index') }}" class="flex items-center gap-3 px-4 py-3 {{ request()->routeIs('extraviados.*') ? 'text-blue-900 bg-blue-50 border border-blue-100 shadow-sm' : 'text-slate-600 hover:text-blue-700 hover:bg-blue-50/70' }} rounded-lg font-medium transition-colors">
                     <i class="ph ph-magnifying-glass text-xl"></i>
                     Extravíos
                 </a>
-                <a href="{{ route('avistamientos.index') }}" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-blue-700 hover:bg-blue-50/70 rounded-lg font-medium transition-colors">
+                <a href="{{ route('avistamientos.index') }}" class="flex items-center gap-3 px-4 py-3 {{ request()->routeIs('avistamientos.*') ? 'text-blue-900 bg-blue-50 border border-blue-100 shadow-sm' : 'text-slate-600 hover:text-blue-700 hover:bg-blue-50/70' }} rounded-lg font-medium transition-colors">
                     <i class="ph ph-binoculars text-xl"></i>
                     Avistamientos
                 </a>
@@ -35,8 +62,7 @@
                     <i class="ph ph-dog text-xl"></i>
                     Mis Mascotas
                 </a>
-                <a href="{{ route('perfil.index') }}" 
-                class="flex items-center gap-3 px-4 py-3 {{ request()->routeIs('perfil.*') ? 'text-blue-900 bg-blue-50 border border-blue-100 shadow-sm' : 'text-slate-500 hover:text-blue-700 hover:bg-blue-50/70' }} rounded-lg font-medium transition-colors">
+                <a href="{{ route('perfil.index') }}" class="flex items-center gap-3 px-4 py-3 {{ request()->routeIs('perfil.*') ? 'text-blue-900 bg-blue-50 border border-blue-100 shadow-sm' : 'text-slate-500 hover:text-blue-700 hover:bg-blue-50/70' }} rounded-lg font-medium transition-colors">
                     <i class="ph ph-user-circle text-xl"></i>
                     Mi Perfil
                 </a>
@@ -68,11 +94,11 @@
             </div>
         </aside>
 
-        <main class="flex-grow flex flex-col h-screen overflow-y-auto">
+        <main class="flex-grow flex flex-col h-[calc(100vh-72px)] md:h-screen overflow-y-auto">
             @yield('content')
             @include('partials.footer')
         </main>
                
     </div>
 </body>
-</html>
+</html>  
