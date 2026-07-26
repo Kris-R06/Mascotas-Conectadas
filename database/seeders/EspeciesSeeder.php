@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Especie;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class EspeciesSeeder extends Seeder
 {
@@ -13,20 +14,31 @@ class EspeciesSeeder extends Seeder
     public function run(): void
     {
         $especies = [
-            ['id' => 1, 'nombre' => 'Perro'],
-            ['id' => 2, 'nombre' => 'Gato'],
-            ['id' => 3, 'nombre' => 'Ave'],
-            ['id' => 4, 'nombre' => 'Conejo'],
-            ['id' => 5, 'nombre' => 'Roedor'],
-            ['id' => 6, 'nombre' => 'Reptil'],
-            ['id' => 7, 'nombre' => 'Otro']
+            'Perro',
+            'Gato',
+            'Ave',
+            'Conejo',
+            'Roedor',
+            'Reptil',
+            'Otro'
         ];
 
-        foreach ($especies as $especie) {
-            Especie::firstOrCreate(
-                ['id' => $especie['id']],
-                ['nombre' => $especie['nombre']]
-            );
+        foreach ($especies as $nombre) {
+            Especie::firstOrCreate(['nombre' => $nombre]);
+        }
+
+        // Limpieza automática de duplicados (ej. 'perro' vs 'Perro')
+        $all = Especie::all();
+        $seen = [];
+        foreach ($all as $item) {
+            $key = strtolower(trim($item->nombre));
+            if (isset($seen[$key])) {
+                // Reasignar mascotas al ID principal antes de eliminar el duplicado
+                DB::table('mascotas')->where('especie_id', $item->id)->update(['especie_id' => $seen[$key]]);
+                $item->delete();
+            } else {
+                $seen[$key] = $item->id;
+            }
         }
     }
 }

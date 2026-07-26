@@ -54,8 +54,8 @@ class ExtraviadoController extends Controller
             'foto' => ['nullable'],
         ]);
 
-        // Se asigna automáticamente el tipo_reporte_id = 1 (Extravío)
-        $data['tipo_reporte_id'] = 1;
+        $tipoExtravio = \App\Models\TipoReporte::firstOrCreate(['nombre' => 'Extravío']);
+        $data['tipo_reporte_id'] = $tipoExtravio->id;
 
         if ($request->hasFile('foto')) {
             $path = $request->file('foto')->store('reportes', 'public');

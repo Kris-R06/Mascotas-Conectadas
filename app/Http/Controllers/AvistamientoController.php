@@ -14,9 +14,11 @@ class AvistamientoController extends Controller
      */
     public function index(Request $request)
     {
+        $tipoAvistamiento = \App\Models\TipoReporte::firstOrCreate(['nombre' => 'Avistamiento']);
+
         $query = Reporte::query()
             ->with(['tipo_reporte', 'mascota.especie', 'user'])
-            ->where('tipo_reporte_id', 2) // 2 = Avistamiento
+            ->where('tipo_reporte_id', $tipoAvistamiento->id) // Avistamiento
             ->whereNull('mascota_id');     // Solo avistamientos independientes / no vinculados como pista a una mascota extraviada
 
         if ($request->get('filter') === 'mis_publicaciones') {
@@ -53,8 +55,9 @@ class AvistamientoController extends Controller
             'foto' => ['nullable'],
         ]);
 
-        // Se asigna automáticamente el tipo_reporte_id = 2 (Avistamiento)
-        $data['tipo_reporte_id'] = 2;
+        // Se asigna automáticamente el tipo_reporte_id para Avistamiento
+        $tipoAvistamiento = \App\Models\TipoReporte::firstOrCreate(['nombre' => 'Avistamiento']);
+        $data['tipo_reporte_id'] = $tipoAvistamiento->id;
 
         if ($request->hasFile('foto')) {
             $path = $request->file('foto')->store('avistamientos', 'public');
