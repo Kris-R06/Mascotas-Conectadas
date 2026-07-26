@@ -20,7 +20,6 @@
     <div class="w-full">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
             
-            {{-- Iteramos sobre las mascotas del usuario --}}
             @forelse($mascotas as $mascota)
                 <div class="relative bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-slate-100 flex flex-col group">
                     
@@ -83,8 +82,7 @@
                     </div>
                 </div>
             
-            {{-- Estado vacío si no ha registrado mascotas --}}
-            @empty
+                @empty
                 <div class="col-span-full w-full max-w-4xl mx-auto mt-8 flex flex-col items-center justify-center bg-indigo-50/40 border-2 border-dashed border-indigo-200 py-16 px-10 rounded-3xl text-center">
                     <i class="ph ph-dog text-6xl mb-4 text-indigo-400"></i>
                     <h3 class="text-2xl font-bold mb-2 text-indigo-900">Aún no tienes mascotas registradas</h3>

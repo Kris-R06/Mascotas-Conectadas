@@ -15,6 +15,10 @@
         </div>
         
         <div class="flex flex-wrap items-center gap-3">
+
+            <a href="{{ route('adopciones.index', ['filter' => request('filter') === 'mis_publicaciones' ? null : 'mis_publicaciones']) }}" class="{{ request('filter') === 'mis_publicaciones' ? 'bg-blue-950 text-white shadow-md' : 'bg-blue-50 hover:bg-blue-100 text-blue-700' }} font-bold py-3 px-6 rounded-full transition-all flex items-center gap-2 whitespace-nowrap text-sm">
+                <i class="ph ph-user text-lg"></i> {{ request('filter') === 'mis_publicaciones' ? 'Ver Todas las Alertas' : 'Mis Publicaciones' }}
+            </a>
             <button onclick="openSmartMatchModal()" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-6 rounded-full shadow-md hover:shadow-lg transition-all flex items-center gap-2 whitespace-nowrap">
                 <i class="ph ph-magic-wand text-xl"></i> Smart Match
             </button>
@@ -255,9 +259,7 @@
                         </div>
 
                         @auth
-                            {{-- Extraemos el valor del usuario logueado --}}
                             @php $userYard = auth()->user()->has_yard ? '1' : '0'; @endphp
-                            {{-- Campo oculto para asegurar que el formulario reciba el dato aunque los radios estén deshabilitados --}}
                             <input type="hidden" name="has_yard" value="{{ $userYard }}">
                         @endauth
 

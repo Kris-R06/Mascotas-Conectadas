@@ -170,7 +170,6 @@
                                     </button>
                                 </div>
 
-                                {{-- 2. INFORMACIÓN DEL ADOPTANTE INTERESADO (SOLO PARA EL DUEÑO) --}}
                                 @php 
                                     $interesado = \App\Models\User::find($adopcion->user_id); 
                                 @endphp
@@ -200,7 +199,6 @@
                                 @endif
 
                             @elseif($isAdopter)
-                                {{-- ESTADO PARA EL ADOPTANTE: Le confirmamos que su trámite avanza --}}
                                 <div class="pt-4 mt-4 border-t border-blue-100 text-center">
                                     <div class="inline-flex items-center gap-2 text-amber-600 font-bold bg-amber-50 px-4 py-3 rounded-xl border border-amber-200 w-full justify-center">
                                         <i class="ph-fill ph-clock text-xl"></i> Tu solicitud está en revisión. ¡Contacta al dueño!
@@ -208,7 +206,6 @@
                                 </div>
 
                             @elseif(auth()->check() && $adopcion->estatus === 'pendiente')
-                                {{-- NO ES EL DUEÑO Y ESTÁ LOGUEADO: Botón ¡Quiero Adoptar! --}}
                                 <div class="pt-4 mt-4 border-t border-blue-100">
                                     <form action="{{ route('adopciones.adoptar', $adopcion) }}" method="POST" onsubmit="return confirm('¿Estás seguro de enviar tu solicitud de adopción? El dueño será notificado.')">
                                         @csrf
@@ -219,7 +216,6 @@
                                 </div>
 
                             @elseif(!auth()->check() && $adopcion->estatus === 'pendiente')
-                                {{-- NO ESTÁ LOGUEADO: Invitación a Iniciar Sesión --}}
                                 <div class="pt-4 mt-4 border-t border-blue-100">
                                     <a href="{{ route('login') }}" class="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-md transition-colors text-sm">
                                         <i class="ph ph-sign-in"></i> Inicia sesión para adoptar
