@@ -25,18 +25,19 @@
                     Reporta extravíos en tiempo real, publica avistamientos en tu zona para ayudar a los dueños, o abre las puertas de tu hogar a una mascota en adopción.
                 </p>
 
-                <!-- Botones de Acción Rápida con Enlaces Laravel Directos -->
+                <!-- Botones de Acción Rápida con Enlaces Directos -->
                 <div class="flex flex-wrap items-center gap-3 pt-2">
-                    <a href="{{ route('extraviados.index') }}" class="bg-rose-500 hover:bg-rose-600 text-white px-5 py-3 rounded-xl font-bold shadow-lg shadow-rose-900/20 transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
+                    <a href="{{ route('extraviados.create') }}" class="bg-rose-500 hover:bg-rose-600 text-white px-5 py-3 rounded-xl font-bold shadow-lg shadow-rose-900/20 transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
                         <i class="ph-bold ph-warning-circle text-xl"></i>
                         Reportar Extravío
                     </a>
                     
-                    <a href="{{ route('avistamientos.index') }}" class="bg-amber-500 hover:bg-amber-600 text-white px-5 py-3 rounded-xl font-bold shadow-lg shadow-amber-900/20 transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
+                    <a href="{{ route('avistamientos.create') }}" class="bg-amber-500 hover:bg-amber-600 text-white px-5 py-3 rounded-xl font-bold shadow-lg shadow-amber-900/20 transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
                         <i class="ph-bold ph-binoculars text-xl"></i>
                         Publicar Avistamiento
                     </a>
                     
+                    <a href="{{ route('adopciones.index') }}" class="bg-white/10 hover:bg-white/20 border border-white/30 text-white backdrop-blur-md px-5 py-3 rounded-xl font-semibold transition-all flex items-center gap-2">
                     <a href="{{ route('adopciones.index') }}" class="bg-white/10 hover:bg-white/20 border border-white/30 text-white backdrop-blur-md px-5 py-3 rounded-xl font-semibold transition-all flex items-center gap-2">
                         <i class="ph-bold ph-heart text-xl"></i>
                         Explorar Adopciones
@@ -217,9 +218,9 @@
                                             </div>
                                         </div>
 
-                                        <!-- Botones de Acción directos con enlaces a la vista de reportes -->
+                                        <!-- Botones de Acción directos -->
                                         <div class="flex flex-wrap items-center gap-2 pt-1">
-                                            <a href="{{ route('reportes.create') }}" class="flex-1 bg-amber-500 hover:bg-amber-600 text-white py-2 px-3 rounded-xl font-bold text-xs shadow-sm transition-colors flex items-center justify-center gap-1.5">
+                                            <a href="{{ route('avistamientos.create') }}" class="flex-1 bg-amber-500 hover:bg-amber-600 text-white py-2 px-3 rounded-xl font-bold text-xs shadow-sm transition-colors flex items-center justify-center gap-1.5">
                                                 <i class="ph-bold ph-binoculars"></i>
                                                 Reportar Avistamiento
                                             </a>
@@ -242,7 +243,7 @@
                             <p class="text-xs text-slate-500 max-w-md mx-auto">
                                 ¡Buenas noticias! No se han registrado mascotas perdidas en este momento o que coincidan con la búsqueda.
                             </p>
-                            <a href="{{ route('reportes.create') }}" class="inline-flex items-center gap-2 bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-colors shadow">
+                            <a href="{{ route('extraviados.create') }}" class="inline-flex items-center gap-2 bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-colors shadow">
                                 <i class="ph-bold ph-plus"></i> Publicar Reporte de Extravío
                             </a>
                         </div>
@@ -293,7 +294,7 @@
                         @endforelse
                     </div>
 
-                    <a href="{{ route('reportes.create') }}" class="w-full mt-2 py-2.5 bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold rounded-xl border border-amber-200 transition-colors flex items-center justify-center gap-1.5">
+                    <a href="{{ route('avistamientos.create') }}" class="w-full mt-2 py-2.5 bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold rounded-xl border border-amber-200 transition-colors flex items-center justify-center gap-1.5">
                         <i class="ph-bold ph-plus-circle"></i>
                         Registrar Nuevo Avistamiento
                     </a>
@@ -369,7 +370,7 @@
                             </div>
                         </div>
                         <div class="p-4 pt-0">
-                            <a href="{{ route('create', ['mascota_id' => $mascota->id]) }}" class="w-full py-2 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 font-bold text-xs rounded-xl transition-colors flex items-center justify-center gap-1.5">
+                            <a href="{{ route('adopciones.create', ['mascota_id' => $mascota->id]) }}" class="w-full py-2 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 font-bold text-xs rounded-xl transition-colors flex items-center justify-center gap-1.5">
                                 <i class="ph-bold ph-heart"></i>
                                 Solicitar Adopción
                             </a>
@@ -386,6 +387,6 @@
                 @endforelse
             </div>
         </section>
+
     </main>
-    
 @endsection

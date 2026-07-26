@@ -33,7 +33,10 @@ class Reporte extends Model
 
     public function mascota()
     {
-        return $this->belongsTo(Mascota::class);
+        return $this->belongsTo(Mascota::class)->withDefault([
+            'nombre' => 'Sin identificar / Avistamiento libre',
+            'raza' => 'No especificada',
+        ]);
     }
 
     public function user()
