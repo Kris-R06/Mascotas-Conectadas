@@ -92,7 +92,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/perfil', [PerfilController::class, 'index'])->name('perfil.index');
     Route::get('/perfil/editar', [PerfilController::class, 'edit'])->name('perfil.edit');
     Route::patch('/perfil', [PerfilController::class, 'update'])->name('perfil.update');
-  
+
     Route::get('/mascotas/{mascota}/poster', [PosterController::class, 'generar'])->name('mascotas.poster');
 });
-

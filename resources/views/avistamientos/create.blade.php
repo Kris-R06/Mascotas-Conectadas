@@ -7,7 +7,7 @@
 
 <div class="w-full flex-grow bg-white p-6 md:p-10 font-sans overflow-y-auto">
     
-    <!-- Encabezado idéntico -->
+    <!-- Encabezado -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4 border-b border-slate-100 pb-6">
         <div>
             <h1 class="text-4xl font-extrabold text-blue-950 flex items-center gap-3">
@@ -18,7 +18,7 @@
                 Reporta una mascota vista en la calle o desorientada para ayudar a encontrar a sus dueños.
             </p>
         </div>
-        <a href="{{ route('avistamientos.index') }}" class="bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 font-bold py-3 px-6 rounded-full shadow-sm hover:shadow-md transition-all flex items-center gap-2 whitespace-nowrap">
+        <a href="{{ route('avistamientos.index') }}" class="bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 font-bold py-3 px-6 rounded-full shadow-sm hover:shadow-md transition-all flex items-center gap-2 whitespace-nowrap text-sm">
             <i class="ph ph-arrow-left text-xl"></i> Ver Avistamientos
         </a>
     </div>
@@ -44,34 +44,84 @@
                 @csrf
                 <input type="hidden" name="user_id" value="{{ auth()->id() ?? 1 }}">
 
-                <!-- Mascota Vinculada (Opcional) -->
+                <!-- Sección 1: Selección de Mascota / Datos Básicos -->
                 <div class="space-y-4">
                     <div class="flex items-center gap-3">
                         <div class="bg-amber-100 p-2.5 rounded-xl text-amber-600">
                             <i class="ph ph-paw-print text-2xl"></i>
                         </div>
                         <div>
-                            <h2 class="text-lg font-bold text-blue-950">Mascota Conocida / Vinculada</h2>
-                            <p class="text-xs text-slate-400">Si viste a una mascota registrada en la plataforma, selecciónala aquí (Opcional)</p>
+                            <h2 class="text-lg font-bold text-blue-950">Información del Avistamiento</h2>
+                            <p class="text-xs text-slate-400">Indica si es una mascota vista en la calle o de un reporte registrado</p>
                         </div>
                     </div>
 
-                    <div class="bg-amber-50/30 p-4 rounded-2xl border border-amber-100/60 space-y-2">
-                        <label for="mascota_id" class="block text-xs font-bold uppercase tracking-wider text-slate-500">
-                            Mascota de la Comunidad <span class="text-slate-400 font-normal">(Opcional)</span>
-                        </label>
-                        <select name="mascota_id" id="mascota_id" class="w-full px-4 py-3.5 rounded-xl border border-blue-100 bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm">
-                            <option value="">-- No sé el nombre / Avistamiento libre --</option>
-                            @foreach($mascotas as $mascota)
-                                <option value="{{ $mascota->id }}" {{ old('mascota_id') == $mascota->id ? 'selected' : '' }}>
-                                    🐾 {{ $mascota->nombre }} — {{ ucfirst($mascota->especie->nombre ?? 'Animal') }} ({{ $mascota->raza ?? 'Mestizo' }})
-                                </option>
-                            @endforeach
-                        </select>
+                    <div class="bg-amber-50/30 p-5 rounded-2xl border border-amber-100/60 space-y-4">
+                        <!-- Selector simple de tipo de reporte -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <label id="card-type-unknown" class="flex items-center gap-3 p-4 rounded-xl border-2 border-amber-500 bg-white cursor-pointer transition-all shadow-sm">
+                                <input type="radio" name="tipo_avistamiento" value="desconocida" checked class="accent-amber-500 w-4 h-4">
+                                <div class="text-sm">
+                                    <strong class="font-bold text-slate-800 block">Mascota sin identificar (En la calle)</strong>
+                                    <span class="text-xs text-slate-500">Un animal visto en la calle de nombre desconocido.</span>
+                                </div>
+                            </label>
+
+                            <label id="card-type-known" class="flex items-center gap-3 p-4 rounded-xl border border-slate-200 bg-white hover:border-amber-300 cursor-pointer transition-all">
+                                <input type="radio" name="tipo_avistamiento" value="registrada" class="accent-amber-500 w-4 h-4">
+                                <div class="text-sm">
+                                    <strong class="font-bold text-slate-800 block">Vincular a mascota registrada</strong>
+                                    <span class="text-xs text-slate-500">Sé a qué reporte oficial corresponde esta vista.</span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Opción A: Desplegable si se selecciona Mascota Registrada -->
+                        <div id="container-mascota-select" class="hidden space-y-2 pt-2 border-t border-amber-100">
+                            <label for="mascota_id" class="block text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Seleccionar Mascota
+                            </label>
+                            <select name="mascota_id" id="mascota_id" class="w-full px-4 py-3.5 rounded-xl border border-blue-100 bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-sm">
+                                <option value="">-- Selecciona una mascota de la comunidad --</option>
+                                @foreach($mascotas as $mascota)
+                                    <option value="{{ $mascota->id }}" {{ old('mascota_id') == $mascota->id ? 'selected' : '' }}>
+                                        {{ $mascota->nombre }} — {{ ucfirst($mascota->especie->nombre ?? 'Animal') }} ({{ $mascota->raza ?? 'Mestizo' }})
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Opción B: Campos guiados para describir mascota no identificada -->
+                        <div id="container-unknown-fields" class="space-y-4 pt-2">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Especie</label>
+                                    <select id="quick_especie" class="w-full px-3.5 py-3 rounded-xl border border-blue-100 bg-white text-slate-700 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20">
+                                        <option value="">-- Selecciona --</option>
+                                        @foreach($especies as $especie)
+                                            <option value="{{ ucfirst($especie->nombre) }}">{{ ucfirst($especie->nombre) }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Tamaño aproximado</label>
+                                    <select id="quick_tamano" class="w-full px-3.5 py-3 rounded-xl border border-blue-100 bg-white text-slate-700 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20">
+                                        <option value="">-- Selecciona --</option>
+                                        <option value="Pequeño">Pequeño</option>
+                                        <option value="Mediano">Mediano</option>
+                                        <option value="Grande">Grande</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Color / Pelaje</label>
+                                    <input type="text" id="quick_color" placeholder="Ej. Café con manchas blancas" class="w-full px-3.5 py-3 rounded-xl border border-blue-100 bg-white text-slate-700 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Sección Ubicación interactiva con OpenStreetMap -->
+                <!-- Sección 2: Ubicación interactiva con OpenStreetMap -->
                 <div class="space-y-4 pt-4 border-t border-slate-100">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-3">
@@ -79,8 +129,8 @@
                                 <i class="ph ph-map-pin text-2xl"></i>
                             </div>
                             <div>
-                                <h2 class="text-lg font-bold text-blue-950">Ubicación donde fue visto</h2>
-                                <p class="text-xs text-slate-400">Selecciona en el mapa el lugar exacto del avistamiento</p>
+                                <h2 class="text-lg font-bold text-blue-950">Ubicación del Avistamiento</h2>
+                                <p class="text-xs text-slate-400">Marca en el mapa el lugar donde fue vista la mascota</p>
                             </div>
                         </div>
                     </div>
@@ -88,11 +138,11 @@
                     <!-- Buscador Autocompletado -->
                     <div class="space-y-2 relative">
                         <label class="block text-xs font-bold uppercase tracking-wider text-slate-500">
-                            Buscar Calle o Colonia
+                            Buscar Calle o Colonia en Matamoros / México
                         </label>
                         <div class="flex flex-col sm:flex-row gap-2 relative">
                             <div class="relative flex-1">
-                                <input type="text" id="map-search-input" autocomplete="off" placeholder="Ej. Calle 6, Col. Centro, Matamoros..." class="w-full px-4 py-3 rounded-xl border border-blue-100 bg-white text-slate-700 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+                                <input type="text" id="map-search-input" autocomplete="off" placeholder="Ej. Calle 6, Col. Jardines, Matamoros..." class="w-full px-4 py-3 rounded-xl border border-blue-100 bg-white text-slate-700 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all">
                                 <ul id="search-suggestions" class="absolute left-0 right-0 top-full mt-1 bg-white border border-blue-100 rounded-2xl shadow-xl z-50 max-h-60 overflow-y-auto divide-y divide-slate-100 hidden"></ul>
                             </div>
                             <div class="flex gap-2">
@@ -114,40 +164,40 @@
                             <label for="fecha" class="block text-xs font-bold uppercase tracking-wider text-slate-500">
                                 Fecha del Avistamiento <span class="text-amber-600">*</span>
                             </label>
-                            <input type="date" name="fecha" id="fecha" value="{{ old('fecha', date('Y-m-d')) }}" required class="w-full px-4 py-3.5 rounded-xl border border-blue-100 bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm">
+                            <input type="date" name="fecha" id="fecha" value="{{ old('fecha', date('Y-m-d')) }}" required class="w-full px-4 py-3.5 rounded-xl border border-blue-100 bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-sm">
                         </div>
 
                         <div class="space-y-2">
                             <label for="ubicacion_lat" class="block text-xs font-bold uppercase tracking-wider text-slate-500">
                                 Ubicación / Colonia <span class="text-amber-600">*</span>
                             </label>
-                            <input type="text" name="ubicacion_lat" id="ubicacion_lat" value="{{ old('ubicacion_lat') }}" required placeholder="Ej. Col. Jardines, Matamoros" class="w-full px-4 py-3.5 rounded-xl border border-blue-100 bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm">
+                            <input type="text" name="ubicacion_lat" id="ubicacion_lat" value="{{ old('ubicacion_lat') }}" required placeholder="Ej. Col. Jardines, Matamoros" class="w-full px-4 py-3.5 rounded-xl border border-blue-100 bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-sm">
                         </div>
 
                         <div class="space-y-2">
                             <label for="ubicacion_lng" class="block text-xs font-bold uppercase tracking-wider text-slate-500">
                                 Referencia o Coordenadas <span class="text-amber-600">*</span>
                             </label>
-                            <input type="text" name="ubicacion_lng" id="ubicacion_lng" value="{{ old('ubicacion_lng') }}" required placeholder="Se actualiza al mover el punto en el mapa" class="w-full px-4 py-3.5 rounded-xl border border-blue-100 bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm">
+                            <input type="text" name="ubicacion_lng" id="ubicacion_lng" value="{{ old('ubicacion_lng') }}" required placeholder="Se actualiza al mover el punto en el mapa" class="w-full px-4 py-3.5 rounded-xl border border-blue-100 bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-sm">
                         </div>
                     </div>
                 </div>
 
-                <!-- Sección Imagen y Descripción -->
+                <!-- Sección 3: Fotografía y Detalles -->
                 <div class="space-y-4 pt-4 border-t border-slate-100">
                     <div class="flex items-center gap-3">
                         <div class="bg-amber-100 p-2.5 rounded-xl text-amber-600">
                             <i class="ph ph-image text-2xl"></i>
                         </div>
                         <div>
-                            <h2 class="text-lg font-bold text-blue-950">Fotografía y Pistas</h2>
-                            <p class="text-xs text-slate-400">Sube una foto tomada y describe el estado del animal</p>
+                            <h2 class="text-lg font-bold text-blue-950">Fotografía y Descripción</h2>
+                            <p class="text-xs text-slate-400">Adjunta una imagen si lograste fotografiarlo y añade observaciones</p>
                         </div>
                     </div>
 
                     <div class="space-y-2">
                         <label for="foto" class="block text-xs font-bold uppercase tracking-wider text-slate-500">
-                            Fotografía del Avistamiento
+                            Fotografía del Avistamiento <span class="text-slate-400 font-normal">(Opcional)</span>
                         </label>
                         <input type="file" name="foto" id="foto" accept="image/*" class="w-full bg-amber-50/50 border border-amber-100 p-2.5 rounded-xl text-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 file:mr-4 file:py-2 file:px-5 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-amber-500 file:text-white hover:file:bg-amber-600 cursor-pointer transition-all">
                     </div>
@@ -156,11 +206,11 @@
                         <label for="descripcion" class="block text-xs font-bold uppercase tracking-wider text-slate-500">
                             Descripción / Detalles del Avistamiento <span class="text-amber-600">*</span>
                         </label>
-                        <textarea name="descripcion" id="descripcion" rows="4" required placeholder="Describe la hora aproximada, si traía collar, si parecía asustado o lastimado..." class="w-full px-4 py-3.5 rounded-xl border border-blue-100 bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm">{{ old('descripcion') }}</textarea>
+                        <textarea name="descripcion" id="descripcion" rows="4" required placeholder="Ej. Visto caminando sobre Av. Lauro Villar alrededor de las 3:00 PM. Portaba collar rojo sin placa, parecía asustado..." class="w-full px-4 py-3.5 rounded-xl border border-blue-100 bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-sm leading-relaxed">{{ old('descripcion') }}</textarea>
                     </div>
                 </div>
 
-                <!-- Botones -->
+                <!-- Botones de Acción -->
                 <div class="flex flex-col sm:flex-row justify-end items-center gap-4 pt-6 border-t border-slate-100">
                     <a href="{{ route('avistamientos.index') }}" class="w-full sm:w-auto text-center px-6 py-3 rounded-full text-slate-500 font-bold hover:bg-slate-100 transition-colors text-sm">
                         Cancelar
@@ -177,17 +227,77 @@
 
 </div>
 
-<!-- Script de Leaflet -->
+<!-- Script de Leaflet y Comportamiento de Formulario -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // Toggle entre Mascota Desconocida y Mascota Registrada
+        var radioUnknown = document.querySelector('input[name="tipo_avistamiento"][value="desconocida"]');
+        var radioKnown = document.querySelector('input[name="tipo_avistamiento"][value="registrada"]');
+        var cardUnknown = document.getElementById('card-type-unknown');
+        var cardKnown = document.getElementById('card-type-known');
+        var containerSelect = document.getElementById('container-mascota-select');
+        var containerUnknown = document.getElementById('container-unknown-fields');
+
+        function updateTypeMode() {
+            if (radioKnown.checked) {
+                cardKnown.classList.add('border-amber-500', 'border-2');
+                cardKnown.classList.remove('border-slate-200');
+                cardUnknown.classList.remove('border-amber-500', 'border-2');
+                cardUnknown.classList.add('border-slate-200');
+                
+                containerSelect.classList.remove('hidden');
+                containerUnknown.classList.add('hidden');
+            } else {
+                cardUnknown.classList.add('border-amber-500', 'border-2');
+                cardUnknown.classList.remove('border-slate-200');
+                cardKnown.classList.remove('border-amber-500', 'border-2');
+                cardKnown.classList.add('border-slate-200');
+                
+                containerSelect.classList.add('hidden');
+                containerUnknown.classList.remove('hidden');
+            }
+        }
+
+        radioUnknown.addEventListener('change', updateTypeMode);
+        radioKnown.addEventListener('change', updateTypeMode);
+
+        // Auto-ensamblaje sutil de descripción con los campos rápidos si la descripción está vacía
+        var qEspecie = document.getElementById('quick_especie');
+        var qTamano = document.getElementById('quick_tamano');
+        var qColor = document.getElementById('quick_color');
+        var textareaDesc = document.getElementById('descripcion');
+
+        function syncQuickDescription() {
+            var parts = [];
+            if (qEspecie && qEspecie.value) parts.push(qEspecie.value);
+            if (qTamano && qTamano.value) parts.push('de tamaño ' + qTamano.value.toLowerCase());
+            if (qColor && qColor.value) parts.push('de color ' + qColor.value);
+
+            if (parts.length > 0) {
+                var prefix = parts.join(' ');
+                if (!textareaDesc.value || textareaDesc.dataset.autoGen === 'true') {
+                    textareaDesc.value = prefix + '. ';
+                    textareaDesc.dataset.autoGen = 'true';
+                }
+            }
+        }
+
+        if (qEspecie) qEspecie.addEventListener('change', syncQuickDescription);
+        if (qTamano) qTamano.addEventListener('change', syncQuickDescription);
+        if (qColor) qColor.addEventListener('input', syncQuickDescription);
+
+        textareaDesc.addEventListener('input', function() {
+            this.dataset.autoGen = 'false';
+        });
+
+        // OpenStreetMap + Nominatim + Geolocalización GPS
         var defaultLat = 25.8690;
         var defaultLng = -97.5027;
 
         var inputLat = document.getElementById('ubicacion_lat');
         var inputLng = document.getElementById('ubicacion_lng');
         var searchInput = document.getElementById('map-search-input');
-        var suggestionsList = document.getElementById('search-suggestions');
         var searchBtn = document.getElementById('btn-search-map');
 
         var map = L.map('osm-map').setView([defaultLat, defaultLng], 13);
@@ -207,7 +317,7 @@
         }
 
         function reverseGeocode(lat, lng) {
-            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=es`)
                 .then(function(res) { return res.json(); })
                 .then(function(data) {
                     var displayName = data.display_name || '';
@@ -215,6 +325,31 @@
                     var shortAddress = parts.slice(0, 3).join(',').trim();
                     updateInputs(lat, lng, shortAddress);
                 });
+        }
+
+        function getUserLocation() {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        var userLat = position.coords.latitude;
+                        var userLng = position.coords.longitude;
+
+                        map.setView([userLat, userLng], 15);
+                        marker.setLatLng([userLat, userLng]);
+                        reverseGeocode(userLat, userLng);
+                    },
+                    function () {
+                        console.log('Permiso denegado. Usando Matamoros por defecto.');
+                    }
+                );
+            }
+        }
+
+        getUserLocation();
+
+        var myLocationBtn = document.getElementById('btn-my-location');
+        if (myLocationBtn) {
+            myLocationBtn.addEventListener('click', getUserLocation);
         }
 
         marker.on('dragend', function (e) {

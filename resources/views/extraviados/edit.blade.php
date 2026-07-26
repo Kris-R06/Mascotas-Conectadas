@@ -209,6 +209,17 @@
         var defaultLat = 25.8690;
         var defaultLng = -97.5027;
 
+        var rawLng = "{{ $reporte->ubicacion_lng }}";
+        if (rawLng && rawLng.includes(',')) {
+            var parts = rawLng.split(',');
+            var pLat = parseFloat(parts[0].trim());
+            var pLng = parseFloat(parts[1].trim());
+            if (!isNaN(pLat) && !isNaN(pLng)) {
+                defaultLat = pLat;
+                defaultLng = pLng;
+            }
+        }
+
         var inputLat = document.getElementById('ubicacion_lat');
         var inputLng = document.getElementById('ubicacion_lng');
         var searchInput = document.getElementById('map-search-input');
