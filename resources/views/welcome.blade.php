@@ -62,14 +62,19 @@
 
             <div class="hidden lg:flex items-center gap-6 ml-auto">
                 <div class="flex items-center gap-5 text-sm font-medium text-navy/80">
-                    <a href="#adoptar" class="hover:text-sky transition-colors">Adoptar</a>
                     <a href="#servicios" class="hover:text-sky transition-colors">Reportar extravío</a>
                     <a href="#como-funciona" class="hover:text-sky transition-colors">Cómo funciona</a>
                 </div>
-
+                @auth
+                    <a href="{{ route('home') }}" class="inline-flex items-center gap-2 bg-navy text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-navy/90 transition-colors shadow-sm shadow-navy/30">
+                        Ir al panel
+                    </a>
+                @endauth
+                @guest
                 <a href="{{ route('login') }}" class="inline-flex items-center gap-2 bg-coral text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-coral/90 transition-colors shadow-sm shadow-coral/30">
                     Iniciar sesión
                 </a>
+                @endguest
             </div>
 
             <button @click="open = !open" class="lg:hidden text-navy text-2xl" aria-label="Abrir menú">
@@ -79,7 +84,6 @@
         </nav>
 
         <div x-show="open" x-cloak x-transition class="lg:hidden border-t border-slate/10 bg-white px-6 py-5 space-y-4">
-            <a href="#adoptar" class="block text-black font-medium">Adoptar</a>
             <a href="#servicios" class="block text-black font-medium">Reportar extravío</a>
             <a href="#como-funciona" class="block text-black font-medium">Cómo funciona</a>
             <hr class="border-slate/10">
@@ -100,10 +104,10 @@
             </p>
 
             <div class="mt-9 flex flex-wrap gap-4">
-                <a href="#" class="inline-flex items-center gap-2 bg-navy text-white font-semibold px-6 py-3.5 rounded-full hover:bg-navy/90 transition-colors">
+                <a href="{{ route('adopciones.index') }}" class="inline-flex items-center gap-2 bg-navy text-white font-semibold px-6 py-3.5 rounded-full hover:bg-navy/90 transition-colors">
                     <i class="ph-fill ph-heart"></i> Adoptar ahora
                 </a>
-                <a href="#" class="inline-flex items-center gap-2 border border-navy/15 text-navy font-semibold px-6 py-3.5 rounded-full hover:border-sky hover:text-sky transition-colors">
+                <a href="{{ route('extraviados.index') }}" class="inline-flex items-center gap-2 border border-navy/15 text-navy font-semibold px-6 py-3.5 rounded-full hover:border-sky hover:text-sky transition-colors">
                     <i class="ph-bold ph-map-pin"></i> Reportar una mascota
                 </a>
             </div>
