@@ -7,45 +7,46 @@
 
 <div class="w-full flex-grow bg-white p-6 md:p-10 font-sans overflow-y-auto">
     
-    <!-- Encabezado idéntico al Index de Extraviados -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4 border-b border-slate-100 pb-6">
+    <!-- Encabezado con Botón de Regresar -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4 border-b border-slate-100 pb-6 max-w-4xl mx-auto">
         <div>
-            <h1 class="text-4xl font-extrabold text-blue-950 flex items-center gap-3">
-                <i class="ph ph-siren text-blue-500 animate-pulse"></i> 
-                Reportar Mascota Extraviada
+            <h1 class="text-3xl font-extrabold text-blue-950 flex items-center gap-2">
+                <i class="ph ph-siren text-rose-600"></i>
+                Publicar Alerta de Extravío
             </h1>
-            <p class="mt-2 text-slate-500 font-light">
-                Completa los datos del reporte y ubica el lugar exacto en el mapa.
-            </p>
+            <p class="text-xs text-slate-400 mt-1">Registra los datos de tu mascota extraviada para que la comunidad te ayude a encontrarla</p>
         </div>
-        <a href="{{ route('extraviados.index') }}" class="bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 font-bold py-3 px-6 rounded-full shadow-sm hover:shadow-md transition-all flex items-center gap-2 whitespace-nowrap">
-            <i class="ph ph-arrow-left text-xl"></i> Regresar a Alertas
+
+        <a href="{{ route('extraviados.index') }}" class="bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 font-bold py-2.5 px-5 rounded-full shadow-sm hover:shadow-md transition-all flex items-center gap-2 text-sm">
+            <i class="ph ph-arrow-left text-lg"></i> Cancelar
         </a>
     </div>
 
-    <!-- Contenido del Formulario principal -->
-    <div class="w-full max-w-5xl mx-auto">
-        <div class="bg-white rounded-3xl shadow-sm border border-blue-50 p-6 md:p-10">
-            
-            @if ($errors->any())
-                <div class="mb-8 bg-blue-50/80 border border-blue-200 text-blue-900 p-5 rounded-2xl text-sm space-y-1">
-                    <strong class="font-bold flex items-center gap-2 text-blue-950">
-                        <i class="ph ph-warning-circle text-lg text-blue-600"></i> Por favor revisa los siguientes campos:
-                    </strong>
-                    <ul class="list-disc list-inside mt-2 text-xs text-slate-600 space-y-1">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+    <!-- Contenedor del Formulario -->
+    <div class="w-full max-w-4xl mx-auto">
 
+        <!-- Mensajes de Error de Validación -->
+        @if ($errors->any())
+            <div class="mb-6 p-4 bg-rose-50 border border-rose-200 rounded-2xl text-rose-700 text-sm">
+                <div class="font-bold mb-1 flex items-center gap-2">
+                    <i class="ph ph-warning-circle text-lg"></i> Por favor corrige los siguientes errores:
+                </div>
+                <ul class="list-disc list-inside space-y-1 text-xs">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <div class="bg-white rounded-3xl shadow-sm border border-blue-100 p-6 sm:p-8 md:p-10">
+            
             <form action="{{ route('extraviados.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
                 @csrf
                 <input type="hidden" name="tipo_reporte_id" value="1">
                 <input type="hidden" name="user_id" value="{{ auth()->id() ?? 1 }}">
 
-                <!-- Sección 1: Selección de Mascota -->
+                <!-- Sección 1: Selección de Mascota de Mis Mascotas -->
                 <div class="space-y-4">
                     <div class="flex items-center gap-3">
                         <div class="bg-blue-100 p-2.5 rounded-xl text-blue-600">
@@ -57,23 +58,55 @@
                         </div>
                     </div>
 
-                    <div class="bg-blue-50/30 p-4 sm:p-5 rounded-2xl border border-blue-100/60 space-y-3">
-                        <label for="mascota_id" class="block text-xs font-bold uppercase tracking-wider text-slate-500">
-                            Mascota Registrada <span class="text-blue-600">*</span>
-                        </label>
-                        <select name="mascota_id" id="mascota_id" required class="w-full px-4 py-3.5 rounded-xl border border-blue-100 bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm">
-                            <option value="" data-foto="">-- Selecciona una mascota --</option>
-                            @foreach($mascotas as $mascota)
+                    <div class="bg-blue-50/30 p-4 sm:p-5 rounded-2xl border border-blue-100/60 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Mis Mascotas Registradas <span class="text-blue-600">*</span>
+                            </label>
+                            <span class="text-xs text-slate-400">Selecciona tu mascota</span>
+                        </div>
+
+                        <input type="hidden" name="mascota_id" id="mascota_id" value="{{ old('mascota_id') }}" required>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="pet-cards-grid">
+                            @forelse($mascotas as $mascota)
                                 @php
-                                    $fotoUrl = $mascota->foto ? (Str::startsWith($mascota->foto, 'http') ? $mascota->foto : asset('storage/' . $mascota->foto)) : 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=300&q=80';
+                                    $fotoUrl = $mascota->foto ? (Str::startsWith($mascota->foto, 'http') ? $mascota->foto : asset('storage/' . $mascota->foto)) : asset('storage/mascotas/default.jpg');
                                 @endphp
-                                <option value="{{ $mascota->id }}" data-nombre="{{ $mascota->nombre }}" data-foto="{{ $fotoUrl }}" {{ old('mascota_id') == $mascota->id ? 'selected' : '' }}>
-                                    🐾 {{ $mascota->nombre }} — {{ ucfirst($mascota->especie->nombre ?? 'Animal') }} ({{ $mascota->raza ?? 'Mestizo' }})
-                                </option>
-                            @endforeach
-                        </select>
-                        <p class="text-xs text-slate-400">
-                            ¿Aún no has registrado a tu mascota? 
+                                <div data-id="{{ $mascota->id }}" data-nombre="{{ $mascota->nombre }}" data-foto="{{ $fotoUrl }}" class="pet-card-item cursor-pointer flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-2xl hover:border-blue-500 hover:shadow-sm transition-all text-left group {{ old('mascota_id') == $mascota->id ? 'border-blue-600 bg-blue-50/20 ring-2 ring-blue-500/20' : '' }}">
+                                    <!-- Foto en pequeño -->
+                                    <div class="w-12 h-12 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0 border border-slate-200 group-hover:scale-105 transition-transform">
+                                        <img src="{{ $fotoUrl }}" alt="{{ $mascota->nombre }}" class="w-full h-full object-cover">
+                                    </div>
+
+                                    <div class="flex-1 min-w-0">
+                                        <h4 class="text-sm font-bold text-slate-800 capitalize truncate">{{ $mascota->nombre }}</h4>
+                                        <p class="text-xs text-slate-400 truncate">{{ ucfirst($mascota->especie->nombre ?? 'Mascota') }} • {{ $mascota->raza ?? 'Mestizo' }}</p>
+                                    </div>
+
+                                    <div class="pet-check-badge w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-white text-xs flex-shrink-0 {{ old('mascota_id') == $mascota->id ? 'bg-blue-600 border-blue-600' : '' }}">
+                                        <i class="ph ph-check font-bold {{ old('mascota_id') == $mascota->id ? '' : 'hidden' }}"></i>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="col-span-full bg-white border-2 border-dashed border-rose-200 rounded-2xl p-6 text-center space-y-3">
+                                    <i class="ph ph-siren text-4xl text-rose-500"></i>
+                                    <h3 class="text-sm font-bold text-slate-800">No tienes mascotas registradas como "Extraviadas"</h3>
+                                    <p class="text-xs text-slate-500 max-w-sm mx-auto">Para publicar una alerta de extravío, tu mascota debe tener el estatus <strong>"Extraviado (Se busca)"</strong> en su perfil.</p>
+                                    <div class="flex flex-wrap justify-center gap-3 pt-2">
+                                        <a href="{{ route('mascotas.index') }}" class="inline-flex items-center gap-2 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold py-2.5 px-5 rounded-full text-xs transition-all border border-blue-200">
+                                            <i class="ph ph-paw-print text-base"></i> Mis Mascotas
+                                        </a>
+                                        <a href="{{ route('mascotas.create') }}" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-5 rounded-full text-xs transition-all shadow-sm">
+                                            <i class="ph ph-plus-circle text-base"></i> Registrar Nueva Mascota
+                                        </a>
+                                    </div>
+                                </div>
+                            @endforelse
+                        </div>
+
+                        <p class="text-xs text-slate-400 pt-1">
+                            ¿Falta alguna mascota? 
                             <a href="{{ route('mascotas.create') }}" class="text-blue-600 font-bold hover:underline">Registrar nueva mascota</a>
                         </p>
                     </div>
@@ -101,7 +134,6 @@
                         <div class="flex flex-col sm:flex-row gap-2 relative">
                             <div class="relative flex-1">
                                 <input type="text" id="map-search-input" autocomplete="off" placeholder="Escribe para buscar (ej. Calle Sexta, Col. Jardines, Matamoros...)" class="w-full px-4 py-3 rounded-xl border border-blue-100 bg-white text-slate-700 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
-                                <!-- Desplegable de Coincidencias en Tiempo Real -->
                                 <ul id="search-suggestions" class="absolute left-0 right-0 top-full mt-1 bg-white border border-blue-100 rounded-2xl shadow-xl z-50 max-h-60 overflow-y-auto divide-y divide-slate-100 hidden"></ul>
                             </div>
                             <div class="flex gap-2">
@@ -127,7 +159,7 @@
                             <input type="date" name="fecha" id="fecha" value="{{ old('fecha', date('Y-m-d')) }}" required class="w-full px-4 py-3.5 rounded-xl border border-blue-100 bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm">
                         </div>
 
-                        <!-- Colonia / Ubicación (Auto-llenado por el mapa) -->
+                        <!-- Colonia / Ubicación -->
                         <div class="space-y-2">
                             <label for="ubicacion_lat" class="block text-xs font-bold uppercase tracking-wider text-slate-500">
                                 Ubicación / Colonia <span class="text-blue-600">*</span>
@@ -135,7 +167,7 @@
                             <input type="text" name="ubicacion_lat" id="ubicacion_lat" value="{{ old('ubicacion_lat') }}" required placeholder="Ej. Col. San Francisco, Matamoros" class="w-full px-4 py-3.5 rounded-xl border border-blue-100 bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm">
                         </div>
 
-                        <!-- Referencia / Coordenadas (Auto-llenado) -->
+                        <!-- Referencia / Coordenadas -->
                         <div class="space-y-2">
                             <label for="ubicacion_lng" class="block text-xs font-bold uppercase tracking-wider text-slate-500">
                                 Referencia o Coordenadas <span class="text-blue-600">*</span>
@@ -145,7 +177,7 @@
                     </div>
                 </div>
 
-                <!-- Sección 3: Fotografías y Descripción (Área Unificada de Fotografías) -->
+                <!-- Sección 3: Fotografías y Descripción -->
                 <div class="space-y-6 pt-4 border-t border-slate-100">
                     <div class="flex items-center gap-3">
                         <div class="bg-blue-100 p-2.5 rounded-xl text-blue-600">
@@ -157,10 +189,10 @@
                         </div>
                     </div>
 
-                    <!-- Contenedor Integrado de Fotografías (Foto Automática + Foto Adicional) -->
+                    <!-- Contenedor Integrado de Fotografías -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         
-                        <!-- Columna A: Foto Oficial Registrada (Vista previa dinámica) -->
+                        <!-- Columna A: Foto Oficial Registrada -->
                         <div class="bg-blue-50/40 p-4 sm:p-5 rounded-2xl border border-blue-100/80 space-y-3 flex flex-col justify-between">
                             <div class="flex items-center justify-between">
                                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-500">
@@ -181,35 +213,35 @@
                                 </div>
                             </div>
 
-                            <div id="mascota-photo-placeholder" class="p-5 bg-white rounded-xl border border-dashed border-slate-200 text-center text-xs text-slate-400">
-                                <i class="ph ph-paw-print text-2xl text-slate-300 block mb-1"></i>
-                                Selecciona una mascota en el paso 1 para cargar automáticamente su foto de perfil.
+                            <div id="mascota-photo-placeholder" class="bg-white p-4 rounded-xl border border-dashed border-slate-200 text-center py-6">
+                                <i class="ph ph-image-square text-3xl text-slate-300 mb-1"></i>
+                                <p class="text-xs text-slate-400 font-medium">Selecciona una mascota arriba para cargar su fotografía registrada.</p>
                             </div>
                         </div>
 
-                        <!-- Columna B: Subir Foto Reciente o Adicional -->
-                        <div class="bg-slate-50/70 p-4 sm:p-5 rounded-2xl border border-slate-200/80 space-y-3 flex flex-col justify-between">
+                        <!-- Columna B: Fotografía Reciente Opcional -->
+                        <div class="bg-blue-50/40 p-4 sm:p-5 rounded-2xl border border-blue-100/80 space-y-3 flex flex-col justify-between">
                             <div class="flex items-center justify-between">
                                 <label for="foto" class="block text-xs font-bold uppercase tracking-wider text-slate-500">
-                                    Foto Reciente o Adicional <span class="text-slate-400 font-normal">(Opcional)</span>
+                                    Fotografía Adicional / Reciente
                                 </label>
+                                <span class="text-[10px] text-slate-400 font-medium">Opcional</span>
                             </div>
-                            
-                            <input type="file" name="foto" id="foto" accept="image/*" class="w-full bg-white border border-slate-200 p-2.5 rounded-xl text-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer transition-all">
-                            
-                            <p class="text-[11px] text-slate-500">
-                                📸 ¿Tienes una foto tomada hoy o del momento exacto? Súbela para actualizar la alerta.
-                            </p>
+
+                            <div class="space-y-2">
+                                <input type="file" name="foto" id="foto" accept="image/*" class="w-full bg-white border border-blue-100 p-2.5 rounded-xl text-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer transition-all">
+                                <p class="text-[11px] text-slate-400">Si la mascota cambio de apariencia o tienes una foto del momento del extravío.</p>
+                            </div>
                         </div>
 
                     </div>
 
-                    <!-- Descripción -->
+                    <!-- Descripción / Señas Particulares -->
                     <div class="space-y-2">
                         <label for="descripcion" class="block text-xs font-bold uppercase tracking-wider text-slate-500">
-                            Descripción / Señas Particulares <span class="text-blue-600">*</span>
+                            Descripción y Señas Particulares <span class="text-blue-600">*</span>
                         </label>
-                        <textarea name="descripcion" id="descripcion" rows="4" required placeholder="Describe si traía collar, cascabel, señas particulares o recompensa ofrecida..." class="w-full px-4 py-3.5 rounded-xl border border-blue-100 bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm">{{ old('descripcion') }}</textarea>
+                        <textarea name="descripcion" id="descripcion" rows="4" required placeholder="Describe detalles específicos (ej. Trae collar rojo con cascabel, una mancha blanca en la pata izquierda, responde al nombre de 'Fiddo', asustado por cohetes...)" class="w-full px-4 py-3.5 rounded-xl border border-blue-100 bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm leading-relaxed">{{ old('descripcion') }}</textarea>
                     </div>
                 </div>
 
@@ -219,7 +251,7 @@
                         Cancelar
                     </a>
                     <button type="submit" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-8 rounded-full shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 text-sm">
-                        <i class="ph ph-paw-print text-xl"></i> Publicar Alerta de Extravío
+                        <i class="ph ph-paper-plane-tilt text-xl"></i> Publicar Alerta de Extravío
                     </button>
                 </div>
 
@@ -230,234 +262,214 @@
 
 </div>
 
-<!-- Script de Leaflet y Autocompletado Nominatim API para OpenStreetMap -->
+<!-- Script de Leaflet y Selección de Mascotas -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Manejo de vista previa de la foto oficial de la mascota seleccionada en la Sección de Fotografías
-        var mascotaSelect = document.getElementById('mascota_id');
+        var petItems = document.querySelectorAll('.pet-card-item');
+        var inputMascotaId = document.getElementById('mascota_id');
         var previewContainer = document.getElementById('mascota-photo-preview-container');
         var previewPlaceholder = document.getElementById('mascota-photo-placeholder');
         var previewImg = document.getElementById('mascota-photo-img');
         var previewTitle = document.getElementById('mascota-photo-title');
 
-        function updateMascotaPreview() {
-            if (!mascotaSelect) return;
-            var selectedOption = mascotaSelect.options[mascotaSelect.selectedIndex];
-            var foto = selectedOption ? selectedOption.getAttribute('data-foto') : '';
-            var nombre = selectedOption ? selectedOption.getAttribute('data-nombre') : '';
+        petItems.forEach(function(item) {
+            item.addEventListener('click', function() {
+                petItems.forEach(function(p) {
+                    p.classList.remove('border-blue-600', 'bg-blue-50/40', 'ring-2', 'ring-blue-500/30', 'scale-[1.02]');
+                    p.classList.add('border-slate-200', 'bg-white');
+                    var badge = p.querySelector('.pet-check-badge');
+                    if (badge) {
+                        badge.classList.remove('bg-blue-600', 'border-blue-600', 'scale-110');
+                        badge.classList.add('border-slate-300');
+                        var icon = badge.querySelector('.ph-check');
+                        if (icon) icon.classList.add('hidden');
+                    }
+                });
 
-            if (foto && selectedOption.value !== '') {
-                previewImg.src = foto;
-                previewTitle.textContent = 'Foto asignada de ' + (nombre || 'la mascota');
-                previewContainer.classList.remove('hidden');
-                if (previewPlaceholder) previewPlaceholder.classList.add('hidden');
-            } else {
-                previewContainer.classList.add('hidden');
-                if (previewPlaceholder) previewPlaceholder.classList.remove('hidden');
-            }
+                this.classList.remove('border-slate-200', 'bg-white');
+                this.classList.add('border-blue-600', 'bg-blue-50/40', 'ring-2', 'ring-blue-500/30', 'scale-[1.02]');
+                var badge = this.querySelector('.pet-check-badge');
+                if (badge) {
+                    badge.classList.remove('border-slate-300');
+                    badge.classList.add('bg-blue-600', 'border-blue-600', 'scale-110');
+                    var icon = badge.querySelector('.ph-check');
+                    if (icon) icon.classList.remove('hidden');
+                }
+
+                var mId = this.getAttribute('data-id');
+                var mFoto = this.getAttribute('data-foto');
+                var mNombre = this.getAttribute('data-nombre');
+
+                if (inputMascotaId) inputMascotaId.value = mId;
+
+                if (previewImg && mFoto) {
+                    previewImg.src = mFoto;
+                    previewTitle.textContent = 'Foto asignada de ' + (mNombre || 'la mascota');
+                    if (previewContainer) previewContainer.classList.remove('hidden');
+                    if (previewPlaceholder) previewPlaceholder.classList.add('hidden');
+                }
+            });
+        });
+
+        // Auto-selección inteligente de la primera mascota registrada si no venía una preseleccionada
+        var preselected = document.querySelector('.pet-card-item.border-blue-600');
+        if (preselected) {
+            preselected.click();
+        } else if (petItems.length > 0) {
+            petItems[0].click();
         }
 
-        if (mascotaSelect) {
-            mascotaSelect.addEventListener('change', updateMascotaPreview);
-            updateMascotaPreview();
-        }
-
-        // Coordenadas por defecto (Matamoros, Tamaulipas)
+        // Coordenadas por defecto (Matamoros)
         var defaultLat = 25.8690;
         var defaultLng = -97.5027;
 
         var inputLat = document.getElementById('ubicacion_lat');
         var inputLng = document.getElementById('ubicacion_lng');
-        var coordsBadge = document.getElementById('map-coords-badge');
         var searchInput = document.getElementById('map-search-input');
         var suggestionsList = document.getElementById('search-suggestions');
         var searchBtn = document.getElementById('btn-search-map');
 
-        // Inicializar mapa de OpenStreetMap
         var map = L.map('osm-map').setView([defaultLat, defaultLng], 13);
-
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            attribution: '&copy; OpenStreetMap'
         }).addTo(map);
 
-        // Marcador con ícono de mapa
         var marker = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(map);
 
         function updateInputs(lat, lng, addressName) {
             if (addressName) {
                 inputLat.value = addressName;
-            } else if (!inputLat.value) {
-                inputLat.value = 'Lat: ' + lat.toFixed(5) + ', Lng: ' + lng.toFixed(5);
             }
             inputLng.value = lat.toFixed(6) + ', ' + lng.toFixed(6);
-            if (coordsBadge) {
-                coordsBadge.textContent = 'Lat: ' + lat.toFixed(4) + ', Lng: ' + lng.toFixed(4);
-            }
         }
 
-        // Reverse Geocoding usando la API de Nominatim
         function reverseGeocode(lat, lng) {
-            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=es`)
                 .then(function(res) { return res.json(); })
                 .then(function(data) {
                     var displayName = data.display_name || '';
                     var parts = displayName.split(',');
                     var shortAddress = parts.slice(0, 3).join(',').trim();
                     updateInputs(lat, lng, shortAddress);
-                })
-                .catch(function() {
-                    updateInputs(lat, lng, '');
                 });
         }
 
-        // Función para solicitar ubicación GPS del usuario
         function getUserLocation() {
             if ("geolocation" in navigator) {
                 navigator.geolocation.getCurrentPosition(
                     function (position) {
                         var userLat = position.coords.latitude;
                         var userLng = position.coords.longitude;
-
                         map.setView([userLat, userLng], 15);
                         marker.setLatLng([userLat, userLng]);
                         reverseGeocode(userLat, userLng);
-                    },
-                    function (error) {
-                        console.log('Permiso de ubicación no otorgado. Usando Matamoros por defecto.');
-                    },
-                    {
-                        enableHighAccuracy: true,
-                        timeout: 5000,
-                        maximumAge: 0
                     }
                 );
             }
         }
 
-        // Solicitar ubicación al cargar la vista
-        getUserLocation();
-
-        // Botón "Mi Ubicación"
         var myLocationBtn = document.getElementById('btn-my-location');
         if (myLocationBtn) {
-            myLocationBtn.addEventListener('click', function() {
-                getUserLocation();
+            myLocationBtn.addEventListener('click', getUserLocation);
+        }
+
+        // Autocompletado predictivo al escribir
+        if (searchInput && suggestionsList) {
+            var debounceTimer = null;
+
+            function hideSuggestions() {
+                suggestionsList.classList.add('hidden');
+                suggestionsList.innerHTML = '';
+            }
+
+            searchInput.addEventListener('input', function () {
+                var query = searchInput.value.trim();
+                clearTimeout(debounceTimer);
+
+                if (query.length < 2) {
+                    hideSuggestions();
+                    return;
+                }
+
+                debounceTimer = setTimeout(function () {
+                    var fullQuery = query;
+                    if (!fullQuery.toLowerCase().includes('matamoros')) {
+                        fullQuery += ', Matamoros, Tamaulipas, Mexico';
+                    }
+
+                    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fullQuery)}&countrycodes=mx&limit=6&addressdetails=1&accept-language=es`)
+                        .then(function (res) { return res.json(); })
+                        .then(function (data) {
+                            suggestionsList.innerHTML = '';
+                            if (!data || data.length === 0) {
+                                hideSuggestions();
+                                return;
+                            }
+
+                            data.forEach(function (item) {
+                                var li = document.createElement('li');
+                                li.className = 'px-4 py-3 hover:bg-blue-50 cursor-pointer flex items-center gap-2.5 text-xs text-slate-700 transition-colors border-b border-slate-100 last:border-0';
+                                var shortTitle = item.display_name.split(',').slice(0, 3).join(',').trim();
+                                li.innerHTML = `<i class="ph ph-map-pin text-blue-500 text-base flex-shrink-0"></i> <div><strong class="block text-slate-800 font-bold">${shortTitle}</strong><span class="text-[10px] text-slate-400 block">${item.display_name}</span></div>`;
+
+                                li.addEventListener('click', function () {
+                                    var lat = parseFloat(item.lat);
+                                    var lon = parseFloat(item.lon);
+                                    searchInput.value = shortTitle;
+                                    hideSuggestions();
+
+                                    map.setView([lat, lon], 16);
+                                    marker.setLatLng([lat, lon]);
+                                    updateInputs(lat, lon, shortTitle);
+                                });
+
+                                suggestionsList.appendChild(li);
+                            });
+
+                            suggestionsList.classList.remove('hidden');
+                        })
+                        .catch(function () { hideSuggestions(); });
+                }, 300);
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!searchInput.contains(e.target) && !suggestionsList.contains(e.target)) {
+                    hideSuggestions();
+                }
             });
         }
 
-        // Mover el marcador por arrastre
+        if (searchBtn && searchInput) {
+            searchBtn.addEventListener('click', function () {
+                var query = searchInput.value.trim();
+                if (!query) return;
+                if (!query.toLowerCase().includes('matamoros')) {
+                    query += ', Matamoros, Tamaulipas, Mexico';
+                }
+                fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=mx`)
+                    .then(function(res) { return res.json(); })
+                    .then(function(data) {
+                        if (data && data.length > 0) {
+                            var lat = parseFloat(data[0].lat);
+                            var lon = parseFloat(data[0].lon);
+                            map.setView([lat, lon], 15);
+                            marker.setLatLng([lat, lon]);
+                            updateInputs(lat, lon, data[0].display_name.split(',').slice(0, 3).join(',').trim());
+                        }
+                    });
+            });
+        }
+
         marker.on('dragend', function (e) {
             var pos = marker.getLatLng();
             reverseGeocode(pos.lat, pos.lng);
         });
 
-        // Mover el marcador por clic en el mapa
         map.on('click', function (e) {
             marker.setLatLng(e.latlng);
             reverseGeocode(e.latlng.lat, e.latlng.lng);
-            suggestionsList.classList.add('hidden');
-        });
-
-        // Autocompletado de coincidencias en tiempo real mientras se escribe (Debounce 300ms)
-        var debounceTimer = null;
-
-        searchInput.addEventListener('input', function() {
-            var query = searchInput.value.trim();
-            clearTimeout(debounceTimer);
-
-            if (query.length < 3) {
-                suggestionsList.classList.add('hidden');
-                suggestionsList.innerHTML = '';
-                return;
-            }
-
-            debounceTimer = setTimeout(function() {
-                fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&addressdetails=1`)
-                    .then(function(res) { return res.json(); })
-                    .then(function(results) {
-                        suggestionsList.innerHTML = '';
-                        if (results && results.length > 0) {
-                            results.forEach(function(item) {
-                                var li = document.createElement('li');
-                                li.className = 'px-4 py-3 hover:bg-blue-50 cursor-pointer flex items-start gap-2.5 text-xs text-slate-700 transition-colors';
-                                
-                                var parts = item.display_name.split(',');
-                                var title = parts.slice(0, 2).join(',').trim();
-                                var subtitle = parts.slice(2, 5).join(',').trim();
-
-                                li.innerHTML = `
-                                    <i class="ph ph-map-pin text-blue-600 text-base mt-0.5 flex-shrink-0"></i>
-                                    <div class="overflow-hidden">
-                                        <div class="font-bold text-blue-950 truncate">${title}</div>
-                                        <div class="text-[11px] text-slate-400 truncate">${subtitle}</div>
-                                    </div>
-                                `;
-
-                                li.addEventListener('click', function() {
-                                    var lat = parseFloat(item.lat);
-                                    var lon = parseFloat(item.lon);
-                                    map.setView([lat, lon], 16);
-                                    marker.setLatLng([lat, lon]);
-                                    searchInput.value = title;
-                                    reverseGeocode(lat, lon);
-                                    suggestionsList.classList.add('hidden');
-                                });
-
-                                suggestionsList.appendChild(li);
-                            });
-                            suggestionsList.classList.remove('hidden');
-                        } else {
-                            suggestionsList.classList.add('hidden');
-                        }
-                    })
-                    .catch(function(err) {
-                        console.error(err);
-                        suggestionsList.classList.add('hidden');
-                    });
-            }, 300);
-        });
-
-        // Búsqueda manual por botón o Enter
-        function executeSearch() {
-            var query = searchInput.value.trim();
-            if (!query) return;
-
-            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
-                .then(function(res) { return res.json(); })
-                .then(function(results) {
-                    if (results && results.length > 0) {
-                        var first = results[0];
-                        var lat = parseFloat(first.lat);
-                        var lon = parseFloat(first.lon);
-                        map.setView([lat, lon], 15);
-                        marker.setLatLng([lat, lon]);
-                        reverseGeocode(lat, lon);
-                        suggestionsList.classList.add('hidden');
-                    } else {
-                        alert('No se encontraron ubicaciones para la búsqueda ingresada.');
-                    }
-                })
-                .catch(function(err) {
-                    console.error(err);
-                });
-        }
-
-        searchBtn.addEventListener('click', executeSearch);
-
-        searchInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                executeSearch();
-            }
-        });
-
-        // Ocultar la lista de sugerencias al hacer clic fuera del buscador
-        document.addEventListener('click', function(e) {
-            if (!searchInput.contains(e.target) && !suggestionsList.contains(e.target)) {
-                suggestionsList.classList.add('hidden');
-            }
         });
     });
 </script>

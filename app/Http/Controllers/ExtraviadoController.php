@@ -31,10 +31,10 @@ class ExtraviadoController extends Controller
      */
     public function create()
     {
-        $mascotas = Mascota::with('especie')->where('user_id', auth()->id())->get();
-        if ($mascotas->isEmpty()) {
-            $mascotas = Mascota::with('especie')->get();
-        }
+        $mascotas = Mascota::with('especie')
+            ->where('user_id', auth()->id())
+            ->where('estatus', 'extraviado')
+            ->get();
 
         return view('extraviados.create', compact('mascotas'));
     }
@@ -95,7 +95,7 @@ class ExtraviadoController extends Controller
      */
     public function edit(Reporte $reporte)
     {
-        $mascotas = Mascota::with('especie')->get();
+        $mascotas = Mascota::with('especie')->where('user_id', auth()->id())->get();
         return view('extraviados.edit', compact('reporte', 'mascotas'));
     }
 
