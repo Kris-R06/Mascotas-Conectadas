@@ -8,13 +8,51 @@
             <a href="{{ route('mascotas.index') }}" class="text-slate-500 hover:text-indigo-600 transition-colors flex items-center gap-2 font-semibold w-fit">
                 <i class="ph ph-arrow-left text-xl"></i> Volver a mi manada
             </a>
-            <div class="flex gap-3">
+            <div class="flex flex-wrap gap-3">
+                <button onclick="openDeleteModal()" class="bg-red-50 hover:bg-red-100 text-red-600 font-bold py-2.5 px-5 rounded-xl border border-red-200 transition-colors flex items-center gap-2 text-sm">
+                    <i class="ph ph-trash text-lg"></i> Eliminar
+                </button>
+
                 <a href="{{ route('mascotas.edit', $mascota->id) }}" class="bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 font-bold py-2.5 px-5 rounded-xl shadow-sm transition-colors flex items-center gap-2 text-sm">
                     <i class="ph ph-pencil-simple text-lg"></i> Editar
                 </a>
+                
                 <button onclick="openQrModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-5 rounded-xl shadow-md transition-colors flex items-center gap-2 text-sm">
-                    <i class="ph ph-qr-code text-lg"></i> Ver QR
+                    <i class="ph ph-qr-code text-lg"></i> Ver Placa QR
                 </button>
+            </div>
+        </div>
+
+        <div id="deleteModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+            <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 text-center transform scale-95 transition-transform duration-300 relative border border-slate-100" id="deleteModalCard">
+                
+                <button onclick="closeDeleteModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 bg-slate-100 p-2 rounded-full transition-colors">
+                    <i class="ph ph-x text-xl"></i>
+                </button>
+
+                <div class="inline-flex p-4 bg-red-50 text-red-500 rounded-2xl mb-4 border border-red-100">
+                    <i class="ph ph-warning-circle text-4xl animate-bounce"></i>
+                </div>
+
+                <h3 class="text-2xl font-bold text-slate-800 mb-2">¿Eliminar registro?</h3>
+                <p class="text-sm text-slate-500 mb-6">
+                    ¿Estás seguro de que deseas eliminar a <strong class="text-slate-800 capitalize">{{ $mascota->nombre }}</strong>? Esta acción no se puede deshacer y borrará toda su información y código QR.
+                </p>
+
+                <form action="{{ route('mascotas.destroy', $mascota->id) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+
+                    <div class="flex gap-3">
+                        <button type="submit" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-colors flex items-center justify-center gap-2 text-sm">
+                            <i class="ph ph-trash text-lg"></i> Sí, eliminar
+                        </button>
+                        <button type="button" onclick="closeDeleteModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-4 rounded-xl transition-colors text-sm">
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
+
             </div>
         </div>
 
@@ -184,6 +222,26 @@
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
             closeQrModal();
+        }
+    });
+    const deleteModal = document.getElementById('deleteModal');
+    const deleteModalCard = document.getElementById('deleteModalCard');
+
+    function openDeleteModal() {
+        deleteModal.classList.remove('opacity-0', 'pointer-events-none');
+        deleteModalCard.classList.remove('scale-95');
+        deleteModalCard.classList.add('scale-100');
+    }
+
+    function closeDeleteModal() {
+        deleteModal.classList.add('opacity-0', 'pointer-events-none');
+        deleteModalCard.classList.remove('scale-100');
+        deleteModalCard.classList.add('scale-95');
+    }
+
+    deleteModal.addEventListener('click', (e) => {
+        if (e.target === deleteModal) {
+            closeDeleteModal();
         }
     });
 </script>

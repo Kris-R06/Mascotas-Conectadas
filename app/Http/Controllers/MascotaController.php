@@ -138,10 +138,25 @@ class MascotaController extends Controller
                         ->with('success', '¡Perfil de ' . $mascota->nombre . ' actualizado con éxito!');
     }
 
-    public function destroy(Mascota $mascota)
+    public function destroy($id)
     {
+        $mascota = Mascota::findOrFail($id);
+
+        // 1. Capa de Seguridad: Verificar que la mascota sea del usuario autenticado
+        if ($mascota->user_id !== auth()->id()) {
+            abort(403, 'No tienes permiso para eliminar esta mascota.');
+        }
+
+        // 2. Si la mascota tiene una foto subida, la eliminamos del almacenamiento
+        if ($mascota->foto) {
+            Storage::disk('public')->delete($mascota->foto);
+        }
+
+        // 3. Eliminamos el registro de la Base de Datos
         $mascota->delete();
 
-        return redirect()->route('mascotas.index');
+        // 4. Redirigimos a la lista de mascotas con un mensaje de confirmación
+        return redirect()->route('mascotas.index')
+                        ->with('success', 'La mascota ha sido eliminada correctamente.');
     }
 }
