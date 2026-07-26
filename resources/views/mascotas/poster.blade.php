@@ -142,8 +142,8 @@
         <table class="fila-principal">
             <tr>
                 <td class="celda-foto">
-                    @if($mascota->foto)
-                        <img src="{{ public_path('storage/' . $mascota->foto) }}" class="foto">
+                    @if(isset($fotoBase64) && $fotoBase64)
+                        <img src="{{ $fotoBase64 }}" class="foto">
                     @endif
                     <p class="nombre-mascota">{{ $mascota->nombre }}</p>
                 </td>
@@ -182,7 +182,7 @@
             <p class="contacto-dato">Tel: {{ $mascota->user->telefono }}</p>
 
             @if($mascota->qr)
-                <img src="{{ public_path('storage/' . $mascota->qr) }}" class="qr">
+                <img src="{{ $qrUrl }}" class="qr">
             @endif
         </div>
 
