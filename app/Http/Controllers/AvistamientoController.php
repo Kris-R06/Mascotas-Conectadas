@@ -35,7 +35,7 @@ class AvistamientoController extends Controller
      */
     public function create()
     {
-        $mascotas = Mascota::with('especie')->get();
+        $mascotas = $this->mascotasDisponiblesParaAvistamiento();
         $especies = Especie::all();
         return view('avistamientos.create', compact('mascotas', 'especies'));
     }
@@ -82,7 +82,7 @@ class AvistamientoController extends Controller
      */
     public function edit(Reporte $reporte)
     {
-        $mascotas = Mascota::with('especie')->get();
+        $mascotas = $this->mascotasDisponiblesParaAvistamiento();
         $especies = Especie::all();
         return view('avistamientos.edit', compact('reporte', 'mascotas', 'especies'));
     }
@@ -119,5 +119,19 @@ class AvistamientoController extends Controller
         $reporte->delete();
 
         return redirect()->route('avistamientos.index')->with('success', 'Avistamiento eliminado correctamente.');
+    }
+
+    private function mascotasDisponiblesParaAvistamiento()
+    {
+        $tipoExtravio = \App\Models\TipoReporte::firstOrCreate(['nombre' => 'Extravío']);
+
+        return Mascota::query()
+            ->with('especie')
+            ->where('estatus', 'extraviado')
+            ->whereHas('reportes', function ($query) use ($tipoExtravio) {
+                $query->where('tipo_reporte_id', $tipoExtravio->id);
+            })
+            ->orderBy('nombre')
+            ->get();
     }
 }

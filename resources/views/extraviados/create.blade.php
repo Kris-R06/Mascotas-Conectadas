@@ -68,14 +68,18 @@
 
                         <input type="hidden" name="mascota_id" id="mascota_id" value="{{ old('mascota_id') }}" required>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="pet-cards-grid">
+                        <div class="relative">
+                            <input type="text" id="mascota-search" placeholder="Buscar por nombre o especie" class="w-full px-3.5 py-2.5 rounded-xl border border-blue-100 bg-white text-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
+                            <i class="ph ph-magnifying-glass absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        </div>
+
+                        <div class="max-h-56 overflow-y-auto space-y-2 rounded-xl border border-slate-100 bg-slate-50/50 p-2" id="pet-cards-grid">
                             @forelse($mascotas as $mascota)
                                 @php
                                     $fotoUrl = $mascota->foto ? (Str::startsWith($mascota->foto, 'http') ? $mascota->foto : asset('storage/' . $mascota->foto)) : asset('storage/mascotas/default.jpg');
                                 @endphp
-                                <div data-id="{{ $mascota->id }}" data-nombre="{{ $mascota->nombre }}" data-foto="{{ $fotoUrl }}" class="pet-card-item cursor-pointer flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-2xl hover:border-blue-500 hover:shadow-sm transition-all text-left group {{ old('mascota_id') == $mascota->id ? 'border-blue-600 bg-blue-50/20 ring-2 ring-blue-500/20' : '' }}">
-                                    <!-- Foto en pequeño -->
-                                    <div class="w-12 h-12 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0 border border-slate-200 group-hover:scale-105 transition-transform">
+                                <div data-id="{{ $mascota->id }}" data-nombre="{{ $mascota->nombre }}" data-foto="{{ $fotoUrl }}" class="pet-card-item cursor-pointer flex items-center gap-3 p-2.5 bg-white border border-transparent rounded-lg hover:border-blue-300 hover:bg-blue-50/50 transition-all text-left group {{ old('mascota_id') == $mascota->id ? 'border-blue-500 bg-blue-50/60 shadow-sm' : '' }}">
+                                    <div class="w-11 h-11 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0 border border-slate-200 group-hover:scale-105 transition-transform">
                                         <img src="{{ $fotoUrl }}" alt="{{ $mascota->nombre }}" class="w-full h-full object-cover">
                                     </div>
 
@@ -89,7 +93,7 @@
                                     </div>
                                 </div>
                             @empty
-                                <div class="col-span-full bg-white border-2 border-dashed border-blue-200 rounded-2xl p-6 text-center space-y-3">
+                                <div class="bg-white border-2 border-dashed border-blue-200 rounded-2xl p-6 text-center space-y-3">
                                     <i class="ph ph-check-circle text-4xl text-emerald-500"></i>
                                     <h3 class="text-sm font-bold text-slate-800">No hay mascotas pendientes por reportar</h3>
                                     <p class="text-xs text-slate-500 max-w-sm mx-auto">Todas tus mascotas registradas ya cuentan con una alerta de extravío activa publicada o están a salvo en casa.</p>
@@ -272,6 +276,19 @@
         var previewPlaceholder = document.getElementById('mascota-photo-placeholder');
         var previewImg = document.getElementById('mascota-photo-img');
         var previewTitle = document.getElementById('mascota-photo-title');
+
+        var mascotaSearch = document.getElementById('mascota-search');
+        var petGrid = document.getElementById('pet-cards-grid');
+
+        if (mascotaSearch && petGrid) {
+            mascotaSearch.addEventListener('input', function () {
+                var term = this.value.toLowerCase().trim();
+                petItems.forEach(function (item) {
+                    var text = item.textContent.toLowerCase();
+                    item.style.display = text.includes(term) ? '' : 'none';
+                });
+            });
+        }
 
         petItems.forEach(function(item) {
             item.addEventListener('click', function() {
