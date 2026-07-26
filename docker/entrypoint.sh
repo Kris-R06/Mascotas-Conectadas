@@ -23,7 +23,7 @@ fi
 
 # 5. Ejecutar migraciones y seeders de forma segura
 echo "Ejecutando migraciones de base de datos..."
-php artisan migrate:fresh --force
+php artisan migrate --force
 
 echo "Ejecutando seeders de datos iniciales..."
 php artisan db:seed --force || true
