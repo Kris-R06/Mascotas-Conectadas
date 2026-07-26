@@ -1,4 +1,3 @@
-
 @extends('layout.admin')
 @section('content') 
     <!-- Área de Contenido Principal -->
@@ -60,6 +59,6 @@
                 </div>
             </div>
         </section>
-        
     </main>
+    
 @endsection

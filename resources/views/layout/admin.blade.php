@@ -27,11 +27,11 @@
                     <i class="ph ph-heart text-xl"></i>
                     Adopciones
                 </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-blue-700 hover:bg-blue-50/70 rounded-lg font-medium transition-colors">
+                <a href="{{ route('extravios.index') }}" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-blue-700 hover:bg-blue-50/70 rounded-lg font-medium transition-colors">
                     <i class="ph ph-magnifying-glass text-xl"></i>
                     Extravíos
                 </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-blue-700 hover:bg-blue-50/70 rounded-lg font-medium transition-colors">
+                <a href="{{ route('avistamientos.index') }}" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-blue-700 hover:bg-blue-50/70 rounded-lg font-medium transition-colors">
                     <i class="ph ph-binoculars text-xl"></i>
                     Avistamientos
                 </a>
@@ -47,7 +47,6 @@
         </aside>
 
         @yield('content')
-
         @include('partials.footer')
                
     </div>

@@ -14,42 +14,47 @@
         <div id="register-container" class="absolute top-0 left-0 w-1/2 h-full bg-white flex flex-col items-center justify-center p-8 transition-all duration-700 ease-in-out opacity-0 z-0">
             <form action="{{ route('register') }}" method="POST" class="w-full flex flex-col items-center">
                 @csrf
-                <h2 class="text-3xl font-bold mb-6 flex items-center gap-2">
+                <h2 class="text-3xl font-bold mb-4 flex items-center gap-2">
                     <i class="ph ph-paw-print text-indigo-500"></i> Únete a la Manada
                 </h2>
 
-                <div class="w-full grid grid-cols-2 gap-4">
-                    <input type="text" name="name" placeholder="Nombre completo" class="w-full bg-slate-100 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
-                    <input type="email" name="email" placeholder="Correo electrónico" class="w-full bg-slate-100 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
-                    <input type="tel" name="telefono" placeholder="Teléfono" class="w-full bg-slate-100 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
-                    <input type="text" name="direccion" placeholder="Dirección" class="w-full bg-slate-100 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
-                    <input type="password" name="password" placeholder="Contraseña" class="w-full bg-slate-100 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
-                    <input type="password" name="password_confirmation" placeholder="Confirmar contraseña" class="w-full bg-slate-100 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
-                </div>
-
-                <div class="w-full flex justify-between mt-6 text-sm text-slate-600 px-2">
-                    <label class="flex items-center gap-2 cursor-pointer hover:text-indigo-600 transition-colors">
-                        <input type="checkbox" name="has_yard" value="1" class="accent-indigo-500 w-4 h-4">
-                        Tengo patio amplio
-                    </label>
-                    <label class="flex items-center gap-2 cursor-pointer hover:text-indigo-600 transition-colors">
-                        <input type="checkbox" name="kids" value="1" class="accent-indigo-500 w-4 h-4">
-                        Tengo niños en casa
-                    </label>
-                </div>
-                
-                <!-- 
-                @if ($errors->any())
-                    <div class="mt-4 w-full bg-red-100 text-red-700 p-3 rounded-lg">
-                        <ul class="list-disc list-inside">
+                @if ($errors->any() && old('name'))
+                    <div class="w-full bg-red-50 border border-red-200 text-red-600 p-3 rounded-xl mb-4 text-sm animate-pulse">
+                        <strong class="font-bold flex items-center gap-1"><i class="ph ph-warning-circle text-lg"></i> Revisa estos detalles:</strong>
+                        <ul class="list-disc list-inside mt-1">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
                             @endforeach
                         </ul>
                     </div>
                 @endif
-                -->
-                <button type="submit" class="mt-8 bg-indigo-500 text-white font-bold py-3 px-12 rounded-full hover:bg-indigo-600 transition-colors shadow-lg">Registrarse</button>
+
+                <div class="w-full grid grid-cols-2 gap-4">
+                    <input type="text" name="name" value="{{ old('name') }}" placeholder="Nombre completo" minlength="3" class="w-full bg-slate-100 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 invalid:focus:ring-red-500 transition-shadow" required>
+                    
+                    <input type="email" name="email" value="{{ old('email') }}" placeholder="Correo electrónico" class="w-full bg-slate-100 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 invalid:focus:ring-red-500 transition-shadow" required>
+                    
+                    <input type="tel" name="telefono" value="{{ old('telefono') }}" placeholder="Teléfono" pattern="[0-9]{10,13}" title="Debe contener entre 10 y 13 números" class="w-full bg-slate-100 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 invalid:focus:ring-red-500 transition-shadow" required>
+                    
+                    <input type="text" name="direccion" value="{{ old('direccion') }}" placeholder="Dirección" class="w-full bg-slate-100 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 invalid:focus:ring-red-500 transition-shadow" required>
+                    
+                    <input type="password" name="password" placeholder="Contraseña" minlength="8" title="Mínimo 8 caracteres" class="w-full bg-slate-100 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 invalid:focus:ring-red-500 transition-shadow" required>
+                    
+                    <input type="password" name="password_confirmation" placeholder="Confirmar contraseña" minlength="8" class="w-full bg-slate-100 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 invalid:focus:ring-red-500 transition-shadow" required>
+                </div>
+
+                <div class="w-full flex justify-between mt-6 text-sm text-slate-600 px-2">
+                    <label class="flex items-center gap-2 cursor-pointer hover:text-indigo-600 transition-colors">
+                        <input type="checkbox" name="has_yard" value="1" {{ old('has_yard') ? 'checked' : '' }} class="accent-indigo-500 w-4 h-4">
+                        Tengo patio amplio
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer hover:text-indigo-600 transition-colors">
+                        <input type="checkbox" name="kids" value="1" {{ old('kids') ? 'checked' : '' }} class="accent-indigo-500 w-4 h-4">
+                        Tengo niños en casa
+                    </label>
+                </div>
+                
+                <button type="submit" class="mt-6 bg-indigo-500 text-white font-bold py-3 px-12 rounded-full hover:bg-indigo-600 transition-colors shadow-lg">Registrarse</button>
             </form>
         </div>
 
@@ -60,9 +65,21 @@
                     <i class="ph ph-sign-in text-indigo-500"></i> Iniciar Sesión
                 </h2>
 
-                <input type="email" name="email" placeholder="Correo electrónico" class="w-full bg-slate-100 p-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4" required>
-                <input type="password" name="password" placeholder="Contraseña" class="w-full bg-slate-100 p-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-6" required>
+                @if ($errors->any() && !old('name'))
+                    <div class="w-full bg-red-50 border border-red-200 text-red-600 p-3 rounded-xl mb-4 text-sm animate-pulse">
+                        <strong class="font-bold flex items-center gap-1"><i class="ph ph-warning-circle text-lg"></i> Datos incorrectos:</strong>
+                        <ul class="list-disc list-inside mt-1">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
+                <input type="email" name="email" value="{{ old('email') }}" placeholder="Correo electrónico" class="w-full bg-slate-100 p-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 invalid:focus:ring-red-500 transition-shadow mb-4" required>
+                
+                <input type="password" name="password" placeholder="Contraseña" class="w-full bg-slate-100 p-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 invalid:focus:ring-red-500 transition-shadow mb-6" required>
+    
                 <button type="submit" class="bg-indigo-500 text-white font-bold py-3 px-12 rounded-full hover:bg-indigo-600 transition-colors shadow-lg">Ingresar</button>
             </form>
         </div>
@@ -96,43 +113,46 @@
         const overlayLeft = document.getElementById('overlay-left');
         const overlayRight = document.getElementById('overlay-right');
 
-        signUpBtn.addEventListener('click', () => {
-            // Mueve el panel azul hacia la izquierda
+        // Función que ejecuta la animación hacia el Registro
+        const slideToRegister = () => {
             overlayContainer.classList.add('-translate-x-full');
             
-            // Intercambia los textos del panel azul
             overlayLeft.classList.remove('-translate-x-full');
             overlayLeft.classList.add('translate-x-0');
             overlayRight.classList.remove('translate-x-0');
             overlayRight.classList.add('translate-x-full');
             
-            // Oculta el login y lo desplaza a la derecha
             loginContainer.classList.add('translate-x-full', 'opacity-0', 'z-0');
             loginContainer.classList.remove('opacity-100', 'z-10');
             
-            // Muestra el registro desplazándolo a la derecha (fuera del panel azul)
             registerContainer.classList.add('translate-x-full', 'opacity-100', 'z-10');
             registerContainer.classList.remove('opacity-0', 'z-0');
-        });
+        };
+
+        // Event Listeners para los botones
+        signUpBtn.addEventListener('click', slideToRegister);
 
         signInBtn.addEventListener('click', () => {
-            // Regresa el panel azul a la derecha
             overlayContainer.classList.remove('-translate-x-full');
             
-            // Intercambia los textos del panel azul a su estado original
             overlayLeft.classList.add('-translate-x-full');
             overlayLeft.classList.remove('translate-x-0');
             overlayRight.classList.add('translate-x-0');
             overlayRight.classList.remove('translate-x-full');
             
-            // Regresa el login a la izquierda y lo muestra
             loginContainer.classList.remove('translate-x-full', 'opacity-0', 'z-0');
             loginContainer.classList.add('opacity-100', 'z-10');
             
-            // Oculta el registro
             registerContainer.classList.remove('translate-x-full', 'opacity-100', 'z-10');
             registerContainer.classList.add('opacity-0', 'z-0');
         });
+
+        @if($errors->any() && old('name'))
+            setTimeout(() => {
+                slideToRegister();
+            }, 100);
+        @endif
+        
     </script>
 </body>
 </html>
