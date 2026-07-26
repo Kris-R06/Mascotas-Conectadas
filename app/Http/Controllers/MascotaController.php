@@ -25,10 +25,7 @@ class MascotaController extends Controller
     public function create()
     {
         if (Especie::count() === 0) {
-            Especie::firstOrCreate(['id' => 1], ['nombre' => 'Perro']);
-            Especie::firstOrCreate(['id' => 2], ['nombre' => 'Gato']);
-            Especie::firstOrCreate(['id' => 3], ['nombre' => 'Ave']);
-            Especie::firstOrCreate(['id' => 4], ['nombre' => 'Otro']);
+            (new \Database\Seeders\EspeciesSeeder())->run();
         }
 
         $especies = Especie::all();
@@ -38,10 +35,7 @@ class MascotaController extends Controller
     public function store(Request $request)
     {
         if (Especie::count() === 0) {
-            Especie::firstOrCreate(['id' => 1], ['nombre' => 'Perro']);
-            Especie::firstOrCreate(['id' => 2], ['nombre' => 'Gato']);
-            Especie::firstOrCreate(['id' => 3], ['nombre' => 'Ave']);
-            Especie::firstOrCreate(['id' => 4], ['nombre' => 'Otro']);
+            (new \Database\Seeders\EspeciesSeeder())->run();
         }
 
         $validated = $request->validate([

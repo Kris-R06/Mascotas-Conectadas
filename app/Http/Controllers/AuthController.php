@@ -27,7 +27,6 @@ class AuthController extends Controller
 
         // 2. Aseguramos que el rol por defecto exista en la base de datos
         $tipoUser = TipoUser::firstOrCreate(
-            ['id' => 1],
             ['nombre' => 'Usuario']
         );
 
