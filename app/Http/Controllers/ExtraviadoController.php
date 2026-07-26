@@ -11,13 +11,17 @@ class ExtraviadoController extends Controller
     /**
      * Muestra la lista de mascotas extraviadas.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $reportes = Reporte::query()
+        $query = Reporte::query()
             ->with(['tipo_reporte', 'mascota.especie', 'user'])
-            ->where('tipo_reporte_id', 1) // 1 = Extravío
-            ->latest('fecha')
-            ->get();
+            ->where('tipo_reporte_id', 1); // 1 = Extravío
+
+        if ($request->get('filter') === 'mis_publicaciones') {
+            $query->where('user_id', auth()->id());
+        }
+
+        $reportes = $query->latest('fecha')->get();
 
         return view('extraviados.index', compact('reportes'));
     }
@@ -53,14 +57,12 @@ class ExtraviadoController extends Controller
         // Se asigna automáticamente el tipo_reporte_id = 1 (Extravío)
         $data['tipo_reporte_id'] = 1;
 
-        // Procesar subida de archivo de imagen
         if ($request->hasFile('foto')) {
             $path = $request->file('foto')->store('reportes', 'public');
             $data['foto'] = $path;
         } elseif (is_string($request->foto) && !empty($request->foto)) {
             $data['foto'] = $request->foto;
         } else {
-            // Asignar la foto previa de la mascota si no se sube una nueva
             $mascota = Mascota::find($data['mascota_id']);
             $data['foto'] = $mascota->foto ?? 'mascotas/default.jpg';
         }

@@ -11,19 +11,23 @@ class AvistamientoController extends Controller
     /**
      * Muestra la lista de avistamientos reportados.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $reportes = Reporte::query()
+        $query = Reporte::query()
             ->with(['tipo_reporte', 'mascota.especie', 'user'])
-            ->where('tipo_reporte_id', 2) // 2 = Avistamiento
-            ->latest('fecha')
-            ->get();
+            ->where('tipo_reporte_id', 2); // 2 = Avistamiento
+
+        if ($request->get('filter') === 'mis_publicaciones') {
+            $query->where('user_id', auth()->id());
+        }
+
+        $reportes = $query->latest('fecha')->get();
 
         return view('avistamientos.index', compact('reportes'));
     }
 
     /**
-     * Muestra el formulario para crear un nuevo avistamiento independiente (sin mascota conocida).
+     * Muestra el formulario para crear un nuevo avistamiento independiente.
      */
     public function create()
     {

@@ -13,9 +13,14 @@
                 Revisa los reportes activos en la comunidad.
             </p>
         </div>
-        <a href="{{ route('extraviados.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full shadow-md hover:shadow-lg transition-all flex items-center gap-2 whitespace-nowrap">
-            <i class="ph ph-paw-print text-xl"></i> Reportar Mascota Extraviada
-        </a>
+        <div class="flex flex-wrap items-center gap-3">
+            <a href="{{ route('extraviados.index', ['filter' => request('filter') === 'mis_publicaciones' ? null : 'mis_publicaciones']) }}" class="{{ request('filter') === 'mis_publicaciones' ? 'bg-blue-950 text-white shadow-md' : 'bg-blue-50 hover:bg-blue-100 text-blue-700' }} font-bold py-3 px-6 rounded-full transition-all flex items-center gap-2 whitespace-nowrap text-sm">
+                <i class="ph ph-user text-lg"></i> {{ request('filter') === 'mis_publicaciones' ? 'Ver Todas las Alertas' : 'Mis Publicaciones' }}
+            </a>
+            <a href="{{ route('extraviados.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full shadow-md hover:shadow-lg transition-all flex items-center gap-2 whitespace-nowrap">
+                <i class="ph ph-paw-print text-xl"></i> Reportar Mascota Extraviada
+            </a>
+        </div>
     </div>
 
     <div class="w-full">
@@ -73,10 +78,16 @@
                                 </div>
                             </div>
 
-                            <div class="mt-auto pt-4 border-t border-slate-50">
-                                <a href="#" class="w-full flex justify-center items-center gap-2 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 font-bold py-2.5 px-4 rounded-xl transition-colors text-sm">
-                                    <i class="ph ph-eye text-lg"></i> Ver detalles
-                                </a>
+                            <div class="mt-auto pt-4 border-t border-slate-50 flex items-center gap-2">
+                                @if($reporte->user_id == auth()->id())
+                                    <a href="{{ route('extraviados.edit', $reporte->id) }}" class="w-full flex justify-center items-center gap-2 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 font-bold py-2.5 px-4 rounded-xl transition-colors text-sm">
+                                        <i class="ph ph-pencil-simple text-lg"></i> Editar Publicación
+                                    </a>
+                                @else
+                                    <a href="#" class="w-full flex justify-center items-center gap-2 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 font-bold py-2.5 px-4 rounded-xl transition-colors text-sm">
+                                        <i class="ph ph-eye text-lg"></i> Ver detalles
+                                    </a>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -87,10 +98,11 @@
         @if(!$hayExtraviados)
             <div class="w-full max-w-4xl mx-auto mt-8 flex flex-col items-center justify-center bg-blue-50/40 border-2 border-dashed border-blue-300 py-16 px-10 rounded-3xl text-center">
                 <i class="ph ph-hands-clapping text-6xl mb-4 text-blue-500"></i>
-                <h3 class="text-2xl font-bold mb-2 text-blue-900">¡Excelentes noticias para la comunidad!</h3>
+                <h3 class="text-2xl font-bold mb-2 text-blue-900">
+                    {{ request('filter') === 'mis_publicaciones' ? 'No tienes publicaciones registradas' : '¡Excelentes noticias para la comunidad!' }}
+                </h3>
                 <p class="text-blue-700/80 max-w-md">
-                    Actualmente no hay mascotas reportadas como extraviadas.<br>
-                    Todas están a salvo en casa.
+                    {{ request('filter') === 'mis_publicaciones' ? 'Aún no has creado reportes de extravío.' : 'Actualmente no hay mascotas reportadas como extraviadas. Todas están a salvo en casa.' }}
                 </p>
             </div>
         @endif
