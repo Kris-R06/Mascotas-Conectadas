@@ -76,12 +76,43 @@
                             </label>
                         </div>
 
-                        <!-- Opción A: Desplegable si se selecciona Mascota Registrada -->
-                        <div id="container-mascota-select" class="hidden space-y-2 pt-2 border-t border-amber-100">
+                        <!-- Opción A: Selector compacto con buscador y foto si se selecciona Mascota Registrada -->
+                        <div id="container-mascota-select" class="hidden space-y-3 pt-2 border-t border-amber-100">
                             <label for="mascota_id" class="block text-xs font-bold uppercase tracking-wider text-slate-500">
                                 Seleccionar Mascota
                             </label>
-                            <select name="mascota_id" id="mascota_id" class="w-full px-4 py-3.5 rounded-xl border border-blue-100 bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-sm">
+
+                            <div class="relative">
+                                <input type="text" id="mascota-search" placeholder="Buscar por nombre o especie" class="w-full px-3.5 py-2.5 rounded-xl border border-blue-100 bg-white text-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500">
+                                <i class="ph ph-magnifying-glass absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                            </div>
+
+                            <div id="mascota-list" class="max-h-56 overflow-y-auto space-y-2 rounded-xl border border-slate-100 bg-slate-50/50 p-2">
+                                @foreach($mascotas as $mascota)
+                                    @php
+                                        $fotoUrl = $mascota->foto ? asset('storage/' . $mascota->foto) : null;
+                                        $isSelected = old('mascota_id') == $mascota->id;
+                                    @endphp
+                                    <label class="mascota-option-card flex items-center gap-3 p-2.5 rounded-lg border cursor-pointer transition-all {{ $isSelected ? 'border-amber-500 bg-amber-50 shadow-sm' : 'border-transparent bg-white hover:border-amber-200 hover:bg-amber-50/40' }}">
+                                        <input type="radio" name="mascota_option" value="{{ $mascota->id }}" class="sr-only" {{ $isSelected ? 'checked' : '' }}>
+                                        <div class="w-11 h-11 rounded-lg overflow-hidden bg-slate-100 shrink-0 flex items-center justify-center border border-slate-200">
+                                            @if ($fotoUrl)
+                                                <img src="{{ $fotoUrl }}" alt="{{ $mascota->nombre }}" class="w-full h-full object-cover">
+                                            @else
+                                                <i class="ph ph-paw-print text-lg text-slate-400"></i>
+                                            @endif
+                                        </div>
+                                        <div class="min-w-0">
+                                            <div class="font-semibold text-slate-800 text-sm">{{ $mascota->nombre }}</div>
+                                            <div class="text-xs text-slate-500 truncate">
+                                                {{ ucfirst($mascota->especie->nombre ?? 'Animal') }} · {{ $mascota->raza ?? 'Mestizo' }}
+                                            </div>
+                                        </div>
+                                    </label>
+                                @endforeach
+                            </div>
+
+                            <select name="mascota_id" id="mascota_id" class="hidden">
                                 <option value="">-- Selecciona una mascota de la comunidad --</option>
                                 @foreach($mascotas as $mascota)
                                     <option value="{{ $mascota->id }}" {{ old('mascota_id') == $mascota->id ? 'selected' : '' }}>
@@ -238,6 +269,7 @@
         var cardKnown = document.getElementById('card-type-known');
         var containerSelect = document.getElementById('container-mascota-select');
         var containerUnknown = document.getElementById('container-unknown-fields');
+        var hiddenSelect = document.getElementById('mascota_id');
 
         function updateTypeMode() {
             if (radioKnown.checked) {
@@ -261,6 +293,41 @@
 
         radioUnknown.addEventListener('change', updateTypeMode);
         radioKnown.addEventListener('change', updateTypeMode);
+
+        document.querySelectorAll('.mascota-option-card').forEach(function (card) {
+            card.addEventListener('click', function () {
+                var radio = card.querySelector('input[type="radio"]');
+                if (radio) {
+                    radio.checked = true;
+                    if (hiddenSelect) {
+                        hiddenSelect.value = radio.value;
+                    }
+                }
+
+                document.querySelectorAll('.mascota-option-card').forEach(function (item) {
+                    item.classList.remove('border-amber-500', 'bg-amber-50', 'shadow-sm');
+                    item.classList.add('border-transparent', 'bg-white');
+                });
+
+                card.classList.remove('border-transparent', 'bg-white');
+                card.classList.add('border-amber-500', 'bg-amber-50', 'shadow-sm');
+            });
+        });
+
+        var mascotaSearch = document.getElementById('mascota-search');
+        var mascotaList = document.getElementById('mascota-list');
+
+        if (mascotaSearch && mascotaList) {
+            mascotaSearch.addEventListener('input', function () {
+                var term = this.value.toLowerCase().trim();
+                var cards = mascotaList.querySelectorAll('.mascota-option-card');
+
+                cards.forEach(function (card) {
+                    var text = card.textContent.toLowerCase();
+                    card.style.display = text.includes(term) ? '' : 'none';
+                });
+            });
+        }
 
         // Auto-ensamblaje sutil de descripción con los campos rápidos si la descripción está vacía
         var qEspecie = document.getElementById('quick_especie');
