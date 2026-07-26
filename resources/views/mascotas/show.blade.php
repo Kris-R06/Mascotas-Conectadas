@@ -17,9 +17,11 @@
                     <i class="ph ph-pencil-simple text-lg"></i> Editar
                 </a>
                 
+                @if($mascota->estatus === 'extraviado')
                 <button onclick="openQrModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-5 rounded-xl shadow-md transition-colors flex items-center gap-2 text-sm">
-                    <i class="ph ph-qr-code text-lg"></i> Ver Placa QR
+                    <i class="ph ph-qr-code text-lg"></i> Bolante de Desaparecido
                 </button>
+                @endif
             </div>
         </div>
 
@@ -177,8 +179,8 @@
         <div class="inline-flex p-3 bg-indigo-50 text-indigo-600 rounded-2xl mb-3">
             <i class="ph ph-qr-code text-3xl"></i>
         </div>
-        <h3 class="text-2xl font-bold text-slate-800 mb-1">Placa QR Identificadora</h3>
-        <p class="text-xs text-slate-500 mb-6">Escanea esta placa para ver la ficha pública de <span class="font-bold capitalize text-slate-700">{{ $mascota->nombre }}</span>.</p>
+        <h3 class="text-2xl font-bold text-slate-800 mb-1">QR Identificador</h3>
+        <p class="text-xs text-slate-500 mb-6">Escanea el QR para ver la ficha pública de <span class="font-bold capitalize text-slate-700">{{ $mascota->nombre }}</span>.</p>
 
         <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 inline-block mb-6 shadow-inner">
             <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data={{ urlencode(route('mascotas.show', $mascota->id)) }}" 
@@ -191,9 +193,9 @@
         </p>
 
         <div class="flex gap-3">
-            <button onclick="window.print()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-colors flex items-center justify-center gap-2 text-sm">
-                <i class="ph ph-printer text-lg"></i> Imprimir
-            </button>
+            <a href="{{ route('mascotas.poster', $mascota->id) }}" target="_blank" rel="noopener noreferrer" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-colors flex items-center justify-center gap-2 text-sm">
+                <i class="ph ph-printer text-lg"></i> Imprimir Bolante
+            </a>
             <button onclick="closeQrModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-4 rounded-xl transition-colors text-sm">
                 Cerrar
             </button>
