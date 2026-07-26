@@ -34,12 +34,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::get('/adopciones/create', [AdopcionController::class, 'create'])->name('adopciones.create');
+    Route::get('/adopciones/smart-match', [AdopcionController::class, 'smartMatch'])->name('adopciones.smart-match');
     Route::get('/adopciones/{adopcion}', [AdopcionController::class, 'show'])->name('adopciones.show');
     Route::post('/adopciones', [AdopcionController::class, 'store'])->name('adopciones.store');
     Route::get('/adopciones/edit/{adopcion}', [AdopcionController::class, 'edit'])->name('adopciones.edit');
     Route::put('/adopciones/{adopcion}', [AdopcionController::class, 'update'])->name('adopciones.update');
     Route::delete('/adopciones/destroy/{adopcion}', [AdopcionController::class, 'destroy'])->name('adopciones.destroy');
-    Route::get('/adopciones/smart-match', [AdopcionController::class, 'smartMatch'])->name('adopciones.smart-match');
     Route::post('/adopciones/{adopcion}/adoptar', [App\Http\Controllers\AdopcionController::class, 'adoptar'])->name('adopciones.adoptar');
 
     // Rutas de Especies
