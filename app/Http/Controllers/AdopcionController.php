@@ -47,6 +47,13 @@ class AdopcionController extends Controller
         return redirect()->route('adopciones.index');
     }
 
+    public function show(Adopcion $adopcion)
+    {
+        $adopcion->load(['mascota.especie', 'mascota.user']);
+
+        return view('adopciones.show', compact('adopcion'));
+    }
+
     public function edit(Adopcion $adopcion)
     {
         return view('adopciones.edit', compact('adopcion'));
