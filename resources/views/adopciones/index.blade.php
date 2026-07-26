@@ -6,7 +6,7 @@
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4 border-b border-slate-100 pb-6">
         <div>
             <h1 class="text-4xl font-extrabold text-blue-950 flex items-center gap-3">
-                <i class="ph ph-paw-print text-blue-500 animate-pulse"></i> 
+                <i class="ph ph-paw-print text-blue-500"></i> 
                 Adopciones
             </h1>
             <p class="mt-2 text-slate-500 font-light">
@@ -28,6 +28,22 @@
     <div class="w-full">
         @php $hayAdopciones = false; @endphp
 
+        @if(isset($isSmartMatch) && $isSmartMatch)
+            <div class="mb-8 p-6 bg-amber-50 border-2 border-amber-400 rounded-3xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-amber-600 flex items-center gap-2">
+                        <i class="ph ph-magic-wand animate-pulse"></i> Resultados de tu Smart Match
+                    </h2>
+                    <p class="text-amber-700 mt-1 font-medium">
+                        Tu nivel de energía es <strong>{{ $lifestyleScore }}/10</strong>. Mostrando a tus compañeros ideales:
+                    </p>
+                </div>
+                <a href="{{ route('adopciones.index') }}" class="bg-white text-slate-500 hover:text-amber-600 font-bold py-2.5 px-6 rounded-xl border border-slate-200 shadow-sm transition-colors whitespace-nowrap flex items-center gap-2">
+                    <i class="ph ph-x-circle text-lg"></i> Limpiar Filtro
+                </a>
+            </div>
+        @endif
+
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
             
             @foreach($adopciones as $adopcion)
@@ -36,6 +52,12 @@
                     
                     <div class="bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-blue-50 flex flex-col relative group">
                         
+                        @if(isset($isSmartMatch) && $isSmartMatch)
+                            <div class="absolute top-4 left-4 z-10 bg-amber-500 text-white text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
+                                <i class="ph ph-star text-sm"></i> {{ 100 - abs($lifestyleScore - $adopcion->mascota->energy_level) * 10 }}% Match
+                            </div>
+                        @endif
+
                         <div class="absolute top-4 right-4 z-10 bg-blue-600 text-white text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-full shadow-lg">
                             En adopción
                         </div>
@@ -93,11 +115,19 @@
 
         @if(!$hayAdopciones)
             <div class="w-full max-w-4xl mx-auto mt-8 flex flex-col items-center justify-center bg-blue-50/40 border-2 border-dashed border-blue-300 py-16 px-10 rounded-3xl text-center">
-                <i class="ph ph-paw-print text-6xl mb-4 text-blue-500"></i>
-                <h3 class="text-2xl font-bold mb-2 text-blue-900">¡Pronto habrá más oportunidades de adopción!</h3>
-                <p class="text-blue-700/80 max-w-md">
-                    Actualmente no hay adopciones disponibles en este momento, pero nuevas mascotas pronto podrán encontrar un hogar.
-                </p>
+                @if(isset($isSmartMatch) && $isSmartMatch)
+                    <i class="ph ph-magnifying-glass text-6xl mb-4 text-amber-500"></i>
+                    <h3 class="text-2xl font-bold mb-2 text-blue-900">Nadie encaja exactamente ahorita</h3>
+                    <p class="text-blue-700/80 max-w-md">
+                        El Smart Match es estricto para asegurar el bienestar de ambos. Intenta limpiar los filtros para ver todas las adopciones.
+                    </p>
+                @else
+                    <i class="ph ph-paw-print text-6xl mb-4 text-blue-500"></i>
+                    <h3 class="text-2xl font-bold mb-2 text-blue-900">¡Pronto habrá más oportunidades!</h3>
+                    <p class="text-blue-700/80 max-w-md">
+                        Actualmente no hay adopciones disponibles en este momento, pero nuevas mascotas pronto podrán encontrar un hogar.
+                    </p>
+                @endif
             </div>
         @endif
     </div>
@@ -235,6 +265,9 @@
         </form>
 
         <div class="flex flex-col sm:flex-row gap-3 pt-2">
+            <button type="submit" form="smartMatchForm" class="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-colors flex items-center justify-center gap-2 text-sm">
+                <i class="ph ph-magnifying-glass text-lg"></i> Encontrar mi Match
+            </button>
             <button onclick="closeSmartMatchModal()" class="w-full sm:w-auto bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-8 rounded-xl transition-colors text-sm">
                 Cancelar
             </button>
@@ -248,22 +281,17 @@
     const smCard = document.getElementById('smartMatchCard');
 
     function openSmartMatchModal() {
-        // Quita la invisibilidad y permite los clics
         smModal.classList.remove('opacity-0', 'pointer-events-none');
-        // Hace el efecto de zoom in suave
         smCard.classList.remove('scale-95');
         smCard.classList.add('scale-100');
     }
 
     function closeSmartMatchModal() {
-        // Vuelve a ocultar y bloquear clics
         smModal.classList.add('opacity-0', 'pointer-events-none');
-        // Hace el efecto de zoom out suave
         smCard.classList.remove('scale-100');
         smCard.classList.add('scale-95');
     }
 
-    // Permitir cerrar el modal haciendo clic fuera de la tarjeta blanca
     smModal.addEventListener('click', (e) => {
         if (e.target === smModal) {
             closeSmartMatchModal();
@@ -271,4 +299,4 @@
     });
 </script>
 
-@endsection 
+@endsection

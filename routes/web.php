@@ -15,21 +15,27 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/login', [AuthController::class, 'loginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login');
-Route::post('/register', [AuthController::class, 'register'])->name('register');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/adopciones', [AdopcionController::class, 'index'])->name('adopciones.index');
+    Route::get('/extraviados', [ReporteController::class, 'indexExtraviados'])->name('extraviados.index');
+    Route::get('/avistamientos', [ReporteController::class, 'indexAvistamientos'])->name('avistamientos.index');
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+Route::middleware(['guest'])->group(function () {
+    Route::get('/login', [AuthController::class, 'loginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
+    Route::post('/register', [AuthController::class, 'register'])->name('register');
+});
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    Route::get('/adopciones', [AdopcionController::class, 'index'])->name('adopciones.index');
     Route::get('/adopciones/create', [AdopcionController::class, 'create'])->name('adopciones.create');
     Route::post('/adopciones', [AdopcionController::class, 'store'])->name('adopciones.store');
     Route::get('/adopciones/edit/{adopcion}', [AdopcionController::class, 'edit'])->name('adopciones.edit');
     Route::put('/adopciones/{adopcion}', [AdopcionController::class, 'update'])->name('adopciones.update');
     Route::delete('/adopciones/destroy/{adopcion}', [AdopcionController::class, 'destroy'])->name('adopciones.destroy');
+    Route::get('/adopciones/smart-match', [AdopcionController::class, 'smartMatch'])->name('adopciones.smart-match');
 
     // Rutas de Especies
     Route::get('/especies', [EspecieController::class, 'index'])->name('especies.index');
@@ -49,8 +55,6 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/mascotas/{mascota}', [MascotaController::class, 'destroy'])->name('mascotas.destroy');
 
     // Rutas de Reportes
-    Route::get('/extraviados', [ReporteController::class, 'indexExtraviados'])->name('extraviados.index');
-    Route::get('/avistamientos', [ReporteController::class, 'indexAvistamientos'])->name('avistamientos.index');
     Route::get('/reportes/create', [ReporteController::class, 'create'])->name('reportes.create');
     Route::post('/reportes', [ReporteController::class, 'store'])->name('reportes.store');
     Route::get('/reportes/{reporte}/edit', [ReporteController::class, 'edit'])->name('reportes.edit');
