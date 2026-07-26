@@ -8,21 +8,21 @@ use Illuminate\Validation\Rules\Password;
 
 class PerfilController extends Controller
 {
-    // Vista de solo lectura
+    // Vista de solo lectura del perfil
     public function index()
     {
         $user = Auth::user();
         return view('perfil.index', compact('user'));
     }
 
-    // Formulario de edición
+    // Formulario de edición del perfil
     public function edit()
     {
         $user = Auth::user();
         return view('perfil.edit', compact('user'));
     }
 
-    // Guardar cambios
+    // Guardar cambios del perfil
     public function update(Request $request)
     {
         $user = Auth::user();

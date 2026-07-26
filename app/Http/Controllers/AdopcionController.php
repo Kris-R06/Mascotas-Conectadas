@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Adopcion;
+use App\Models\Mascota;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\Mascota;
@@ -21,16 +22,26 @@ class AdopcionController extends Controller
 
     public function create()
     {
-        return view('adopciones.create');
+        // Obtener las mascotas disponibles para adopción
+        $mascotas = Mascota::query()
+            ->with('especie')
+            ->where('estatus', 'adopcion')
+            ->whereDoesntHave('adopciones')
+            ->latest()
+            ->get();
+
+        return view('adopciones.create', compact('mascotas'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
             'mascota_id' => ['required', 'exists:mascotas,id'],
-            'user_id' => ['required', 'exists:users,id'],
+            'user_id' => ['nullable', 'exists:users,id'],
             'estatus' => ['required', Rule::in(['pendiente', 'en_revision', 'aprobada', 'rechazada', 'cancelada'])],
         ]);
+
+        $data['user_id'] = $request->filled('user_id') ? $request->input('user_id') : null;
 
         Adopcion::create($data);
 
@@ -46,9 +57,11 @@ class AdopcionController extends Controller
     {
         $data = $request->validate([
             'mascota_id' => ['required', 'exists:mascotas,id'],
-            'user_id' => ['required', 'exists:users,id'],
+            'user_id' => ['nullable', 'exists:users,id'],
             'estatus' => ['required', Rule::in(['pendiente', 'en_revision', 'aprobada', 'rechazada', 'cancelada'])],
         ]);
+
+        $data['user_id'] = $request->filled('user_id') ? $request->input('user_id') : null;
 
         $adopcion->update($data);
 

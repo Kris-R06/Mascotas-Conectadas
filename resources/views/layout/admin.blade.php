@@ -31,7 +31,7 @@
                     <i class="ph ph-binoculars text-xl"></i>
                     Avistamientos
                 </a>
-                <a href="{{ route('mascotas.index') }}" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-blue-700 hover:bg-blue-50/70 rounded-lg font-medium transition-colors">
+                <a href="{{ route('mascotas.index') }}" class="flex items-center gap-3 px-4 py-3 {{ request()->routeIs('mascotas.*') ? 'text-blue-900 bg-blue-50 border border-blue-100 shadow-sm' : 'text-slate-600 hover:text-blue-700 hover:bg-blue-50/70' }} rounded-lg font-medium transition-colors">
                     <i class="ph ph-dog text-xl"></i>
                     Mis Mascotas
                 </a>
