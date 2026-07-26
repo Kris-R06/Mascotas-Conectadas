@@ -16,17 +16,17 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('especie_id')->constrained()->cascadeOnDelete();
             $table->string('nombre');
-            $table->string('raza');            
-            $table->string('color');
-            $table->integer('tamaño');
-            $table->integer('edad');            
-            $table->string('foto');
-            $table->string('descripcion');
-            $table->string('estatus')->comment('safe, adopcion, extraviado');
-            $table->integer('energy_level');
-            $table->string('space_needed');
-            $table->string('qr');
-            $table->boolean('kid_friendly');
+            $table->string('raza')->nullable();            
+            $table->string('color')->nullable();
+            $table->string('tamaño')->nullable();
+            $table->string('edad')->nullable();            
+            $table->string('foto')->nullable();
+            $table->text('descripcion')->nullable();
+            $table->string('estatus')->default('safe')->comment('safe, adopcion, extraviado');
+            $table->integer('energy_level')->default(5);
+            $table->string('space_needed')->nullable();
+            $table->string('qr')->nullable();
+            $table->boolean('kid_friendly')->default(false);
             $table->timestamps();
         });
     }

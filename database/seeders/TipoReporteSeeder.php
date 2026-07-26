@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\TipoReporte;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class TipoReporteSeeder extends Seeder
@@ -14,12 +13,15 @@ class TipoReporteSeeder extends Seeder
     public function run(): void
     {
         $tipos = [
-            ['nombre' => 'extravio'],
-            ['nombre' => 'avistamiento']
+            ['id' => 1, 'nombre' => 'Extravío'],
+            ['id' => 2, 'nombre' => 'Avistamiento']
         ];
 
         foreach ($tipos as $tipo) {
-            TipoReporte::create($tipo);
+            TipoReporte::firstOrCreate(
+                ['id' => $tipo['id']],
+                ['nombre' => $tipo['nombre']]
+            );
         }
     }
 }

@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\TipoUser;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class TipoUsersSeeder extends Seeder
@@ -14,13 +13,16 @@ class TipoUsersSeeder extends Seeder
     public function run(): void
     {
         $tipos = [
-            ['nombre' => 'user'],
-            ['nombre' => 'refugio'],
-            ['nombre' => 'admin'],
+            ['id' => 1, 'nombre' => 'Usuario'],
+            ['id' => 2, 'nombre' => 'Refugio'],
+            ['id' => 3, 'nombre' => 'Administrador'],
         ];
 
         foreach ($tipos as $tipo) {
-            TipoUser::create($tipo);
+            TipoUser::firstOrCreate(
+                ['id' => $tipo['id']],
+                ['nombre' => $tipo['nombre']]
+            );
         }
     }
 }
