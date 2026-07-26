@@ -6,7 +6,7 @@
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4 border-b border-slate-100 pb-6">
         <div>
             <h1 class="text-4xl font-extrabold text-blue-950 flex items-center gap-3">
-                <i class="ph ph-siren text-blue-500 animate-pulse"></i> 
+                <i class="ph ph-siren text-blue-500"></i> 
                 Alertas de Extravío
             </h1>
             <p class="mt-2 text-slate-500 font-light">
