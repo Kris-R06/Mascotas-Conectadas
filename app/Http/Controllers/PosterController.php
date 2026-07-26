@@ -14,21 +14,39 @@ class PosterController extends Controller
 
         $mascota->load('user', 'especie');
 
-        // ===== Convertir la foto local a base64 =====
+        // ===== Convertir la foto (local o Cloudinary) a base64 =====
         $fotoBase64 = null;
-        if ($mascota->foto) {
-            $rutaFoto = public_path('storage/' . $mascota->foto);
+        $fotoUrl = $mascota->foto_url;
 
-            if (file_exists($rutaFoto)) {
-                $extension = strtolower(pathinfo($rutaFoto, PATHINFO_EXTENSION));
-                $mime = match ($extension) {
-                    'jpg', 'jpeg' => 'image/jpeg',
-                    'png' => 'image/png',
-                    'webp' => 'image/webp',
-                    default => 'image/jpeg',
-                };
-                $datos = file_get_contents($rutaFoto);
-                $fotoBase64 = 'data:' . $mime . ';base64,' . base64_encode($datos);
+        if ($fotoUrl) {
+            if (\Illuminate\Support\Str::startsWith($fotoUrl, ['http://', 'https://'])) {
+                try {
+                    $context = stream_context_create([
+                        'http' => ['timeout' => 10],
+                        'ssl'  => ['verify_peer' => false, 'verify_peer_name' => false],
+                    ]);
+                    $datos = @file_get_contents($fotoUrl, false, $context);
+                    if ($datos !== false) {
+                        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                        $mime = finfo_buffer($finfo, $datos) ?: 'image/jpeg';
+                        finfo_close($finfo);
+                        $fotoBase64 = 'data:' . $mime . ';base64,' . base64_encode($datos);
+                    }
+                } catch (\Throwable $e) {
+                    // Fallback silencioso si falla la red
+                }
+            } else {
+                $rutaFoto = public_path('storage/' . $mascota->foto);
+                if (file_exists($rutaFoto)) {
+                    $extension = strtolower(pathinfo($rutaFoto, PATHINFO_EXTENSION));
+                    $mime = match ($extension) {
+                        'png' => 'image/png',
+                        'webp' => 'image/webp',
+                        default => 'image/jpeg',
+                    };
+                    $datos = file_get_contents($rutaFoto);
+                    $fotoBase64 = 'data:' . $mime . ';base64,' . base64_encode($datos);
+                }
             }
         }
 
