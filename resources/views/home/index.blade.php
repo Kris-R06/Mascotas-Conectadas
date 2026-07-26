@@ -386,6 +386,6 @@
                 @endforelse
             </div>
         </section>
-
     </main>
+    
 @endsection

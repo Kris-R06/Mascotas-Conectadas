@@ -19,7 +19,7 @@
         <!-- Sidebar Izquierda -->
         <aside class="w-64 bg-white border-r border-blue-100 flex-shrink-0 flex flex-col justify-between overflow-y-auto hidden md:flex">
             <nav class="p-4 space-y-2">
-                <a href="#" class="flex items-center gap-3 px-4 py-3 text-blue-900 bg-blue-50 rounded-lg font-semibold transition-colors border border-blue-100 shadow-sm">
+                <a href="{{ route('home') }}" class="flex items-center gap-3 px-4 py-3 text-blue-900 bg-blue-50 rounded-lg font-semibold transition-colors border border-blue-100 shadow-sm">
                     <i class="ph-fill ph-house text-xl text-blue-600"></i>
                     Inicio
                 </a>
@@ -27,11 +27,11 @@
                     <i class="ph ph-heart text-xl"></i>
                     Adopciones
                 </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-blue-700 hover:bg-blue-50/70 rounded-lg font-medium transition-colors">
+                <a href="{{ route('extraviados.index') }}" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-blue-700 hover:bg-blue-50/70 rounded-lg font-medium transition-colors">
                     <i class="ph ph-magnifying-glass text-xl"></i>
                     Extravíos
                 </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-blue-700 hover:bg-blue-50/70 rounded-lg font-medium transition-colors">
+                <a href="{{ route('avistamientos.index') }}" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-blue-700 hover:bg-blue-50/70 rounded-lg font-medium transition-colors">
                     <i class="ph ph-binoculars text-xl"></i>
                     Avistamientos
                 </a>
@@ -41,18 +41,9 @@
                     Mi Perfil
                 </a>
             </nav>
-            
-            <!-- Menú secundario inferior en el sidebar -->
-            <div class="p-4 border-t border-blue-50">
-                <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-blue-700 hover:bg-blue-50/70 rounded-lg font-medium transition-colors">
-                    <i class="ph ph-gear text-xl"></i>
-                    Configuración
-                </a>
-            </div>
         </aside>
 
         @yield('content')
-
         @include('partials.footer')
                
     </div>
