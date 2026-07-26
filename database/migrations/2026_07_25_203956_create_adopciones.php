@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('adopciones', function (Blueprint $table) {
             $table->id();
             $table->foreignId('mascota_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('estatus')->comment('pendiente, en_revision, aprobada, rechazada, cancelada');
             $table->timestamps();
         });
