@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Especie;
+use Illuminate\Support\Facades\Storage;
+
 
 class MascotaController extends Controller
 {
@@ -67,33 +70,72 @@ class MascotaController extends Controller
                         ->with('success', '¡Mascota registrada con éxito a tu manada!');
     }
 
-    public function edit(Mascota $mascota)
+    public function show($id)
     {
-        return view('mascotas.edit', compact('mascota'));
+        // Buscamos la mascota y cargamos su relación con especie
+        $mascota = \App\Models\Mascota::with('especie')->findOrFail($id);
+        if ($mascota->user_id !== auth()->id()) {
+            abort(403, 'No tienes permiso para ver esta mascota.');
+        }
+
+        return view('mascotas.show', compact('mascota'));
+    }
+
+    public function edit($id)
+    {
+        $mascota = Mascota::findOrFail($id);
+        
+        // Proteger: asegurar que el usuario logueado sea el dueño
+        if ($mascota->user_id !== auth()->id()) abort(403);
+        
+        $especies = Especie::all();
+        return view('mascotas.edit', compact('mascota', 'especies'));
     }
 
     public function update(Request $request, Mascota $mascota)
     {
-        $data = $request->validate([
-            'user_id' => ['required', 'exists:users,id'],
-            'especie_id' => ['required', 'exists:especies,id'],
-            'nombre' => ['required', 'string', 'max:255'],
-            'raza' => ['required', 'string', 'max:255'],
-            'color' => ['required', 'string', 'max:255'],
-            'tamaño' => ['required', 'integer', 'min:0'],
-            'edad' => ['required', 'integer', 'min:0'],
-            'foto' => ['required', 'string', 'max:255'],
-            'descripcion' => ['required', 'string'],
-            'estatus' => ['required', Rule::in(['safe', 'adopcion', 'extraviado'])],
-            'energy_level' => ['required', 'integer', 'min:0'],
-            'space_needed' => ['required', 'string', 'max:255'],
-            'qr' => ['required', 'string', 'max:255'],
-            'kid_friendly' => ['required', 'boolean'],
+        // 1. Capa de Seguridad: Evitar que alguien edite la mascota de otro usuario
+        if ($mascota->user_id !== auth()->id()) {
+            abort(403, 'No tienes permiso para editar esta mascota.');
+        }
+
+        // 2. Validación adaptada exactamente a tu formulario HTML
+        $validated = $request->validate([
+            'nombre'       => ['required', 'string', 'max:255'],
+            'especie_id'   => ['required', 'exists:especies,id'],
+            'raza'         => ['nullable', 'string', 'max:255'],
+            'color'        => ['nullable', 'string', 'max:255'],
+            'tamaño'       => ['nullable', 'string', 'max:255'], // En la vista envías 'Pequeño', 'Mediano', etc.
+            'edad'         => ['nullable', 'string', 'max:255'], // En la vista envías '2 meses', etc.
+            'estatus'      => ['required', 'in:safe,adopcion,extraviado'],
+            'descripcion'  => ['nullable', 'string'],
+            'foto'         => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'], // Ahora valida archivos reales
+            'energy_level' => ['required', 'integer', 'min:1', 'max:10'],
         ]);
 
-        $mascota->update($data);
+        // 3. Procesar las casillas (Checkboxes a Booleanos)
+        $validated['space_needed'] = $request->has('space_needed');
+        $validated['kid_friendly'] = $request->has('kid_friendly');
 
-        return redirect()->route('mascotas.index');
+        // 4. El "Hackathon Fix" de SQLite para la descripción
+        $validated['descripcion'] = $request->input('descripcion', 'Sin descripción adicional.');
+
+        // 5. Gestión avanzada de la foto
+        if ($request->hasFile('foto')) {
+            // Si el usuario sube una FOTO NUEVA y ya tenía una antes, borramos la vieja del servidor para ahorrar espacio
+            if ($mascota->foto) {
+                Storage::disk('public')->delete($mascota->foto);
+            }
+            // Guardamos la nueva foto
+            $validated['foto'] = $request->file('foto')->store('mascotas', 'public');
+        }
+
+        // 6. Actualizar la base de datos
+        $mascota->update($validated);
+
+        // 7. Redirigir con mensaje de éxito
+        return redirect()->route('mascotas.index')
+                        ->with('success', '¡Perfil de ' . $mascota->nombre . ' actualizado con éxito!');
     }
 
     public function destroy(Mascota $mascota)

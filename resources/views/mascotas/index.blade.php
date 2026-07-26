@@ -22,7 +22,7 @@
             
             {{-- Iteramos sobre las mascotas del usuario --}}
             @forelse($mascotas as $mascota)
-                <div class="bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-slate-100 flex flex-col group">
+                <div class="relative bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-slate-100 flex flex-col group">
                     
                     @if($mascota->estatus === 'extraviado')
                         <div class="absolute top-4 right-4 z-10 bg-red-500 text-white text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-full shadow-lg">
@@ -73,11 +73,11 @@
                         </div>
 
                         <div class="mt-auto pt-4 border-t border-slate-50 flex gap-2">
-                            <a href="#" class="flex-1 flex justify-center items-center gap-2 bg-slate-50 hover:bg-indigo-500 hover:text-white text-indigo-600 font-bold py-2.5 rounded-xl transition-colors text-sm">
+                            <a href="{{ route('mascotas.edit', $mascota->id) }}" class="flex-1 flex justify-center items-center gap-2 bg-slate-50 hover:bg-indigo-500 hover:text-white text-indigo-600 font-bold py-2.5 rounded-xl transition-colors text-sm">
                                 <i class="ph ph-pencil-simple text-lg"></i> Editar
                             </a>
-                            <a href="#" class="flex-1 flex justify-center items-center gap-2 bg-slate-50 hover:bg-indigo-500 hover:text-white text-indigo-600 font-bold py-2.5 rounded-xl transition-colors text-sm">
-                                <i class="ph ph-qr-code text-lg"></i> Placa QR
+                            <a href="{{ route('mascotas.show', $mascota->id) }}" class="flex-1 flex justify-center items-center gap-2 bg-slate-50 hover:bg-indigo-500 hover:text-white text-indigo-600 font-bold py-2.5 rounded-xl transition-colors text-sm">
+                                <i class="ph ph-eye text-lg"></i> Ver
                             </a>
                         </div>
                     </div>
