@@ -17,16 +17,21 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             TipoUsersSeeder::class,
+            EspeciesSeeder::class,
+            TipoReporteSeeder::class,
         ]);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'tipo_user_id' => 1,
-            'telefono' => '1234567890',
-            'direccion' => 'Direccion de prueba',
-            'has_yard' => false,
-            'kids' => false,
-        ]);
+        User::firstOrCreate(
+            ['email' => 'test@example.com'],
+            [
+                'name' => 'Test User',
+                'password' => bcrypt('password'),
+                'tipo_user_id' => 1,
+                'telefono' => '1234567890',
+                'direccion' => 'Direccion de prueba',
+                'has_yard' => false,
+                'kids' => false,
+            ]
+        );
     }
 }
