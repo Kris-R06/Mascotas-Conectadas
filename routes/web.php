@@ -22,7 +22,6 @@ Route::get('/', function () {
     Route::get('/extraviados', [ExtraviadoController::class, 'index'])->name('extraviados.index');
     Route::get('/avistamientos', [AvistamientoController::class, 'index'])->name('avistamientos.index');
     Route::get('/home', [HomeController::class, 'index'])->name('home');
-    Route::get('/mascotas/{mascota}', [MascotaController::class, 'show'])->name('mascotas.show');
 
 Route::middleware(['guest'])->group(function () {
     Route::get('/login', [AuthController::class, 'loginForm'])->name('login');
@@ -55,7 +54,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/mascotas', [MascotaController::class, 'index'])->name('mascotas.index');
     Route::get('/mascotas/create', [MascotaController::class, 'create'])->name('mascotas.create');
     Route::post('/mascotas', [MascotaController::class, 'store'])->name('mascotas.store');
-    
+    Route::get('/mascotas/{mascota}', [MascotaController::class, 'show'])->name('mascotas.show');
     Route::get('/mascotas/{mascota}/edit', [MascotaController::class, 'edit'])->name('mascotas.edit');
     Route::put('/mascotas/{mascota}', [MascotaController::class, 'update'])->name('mascotas.update');
     Route::delete('/mascotas/{mascota}', [MascotaController::class, 'destroy'])->name('mascotas.destroy');
