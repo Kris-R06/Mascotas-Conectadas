@@ -47,9 +47,7 @@
     <header x-data="{ open: false }" class="sticky top-0 z-50 bg-sky/20 backdrop-blur-md border-b border-slate/10">
         <nav class="max-w-7xl mx-auto px-6 lg:px-8 h-20 flex items-center justify-between">
             <a href="{{ url('/') }}" class="flex items-center gap-2.5 font-display font-extrabold text-xl text-navy">
-                <span class="w-9 h-9 rounded-xl bg-sky/10 flex items-center justify-center">
-                    <i class="ph-fill ph-paw-print text-sky text-lg"></i>
-                </span>
+                <img src="{{ asset('images/image.svg') }}" alt="Mascotas Conectadas" class="h-12 w-12 shrink-0 object-contain">
                 Mascotas Conectadas
             </a>
 
