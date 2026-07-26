@@ -24,12 +24,12 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-    Route::get('/adopciones', [AdopcionController::class, 'index'])->name('index');
-    Route::get('/adopciones/create', [AdopcionController::class, 'create'])->name('create');
-    Route::post('/adopciones', [AdopcionController::class, 'store'])->name('store');
-    Route::get('/adopciones/edit/{adopcion}', [AdopcionController::class, 'edit'])->name('edit');
-    Route::put('/adopciones/{adopcion}', [AdopcionController::class, 'update'])->name('update');
-    Route::delete('/adopciones/destroy/{adopcion}', [AdopcionController::class, 'destroy'])->name('destroy');
+    Route::get('/adopciones', [AdopcionController::class, 'index'])->name('adopciones.index');
+    Route::get('/adopciones/create', [AdopcionController::class, 'create'])->name('adopciones.create');
+    Route::post('/adopciones', [AdopcionController::class, 'store'])->name('adopciones.store');
+    Route::get('/adopciones/edit/{adopcion}', [AdopcionController::class, 'edit'])->name('adopciones.edit');
+    Route::put('/adopciones/{adopcion}', [AdopcionController::class, 'update'])->name('adopciones.update');
+    Route::delete('/adopciones/destroy/{adopcion}', [AdopcionController::class, 'destroy'])->name('adopciones.destroy');
 
     // Rutas de Especies
     Route::get('/especies', [EspecieController::class, 'index'])->name('especies.index');

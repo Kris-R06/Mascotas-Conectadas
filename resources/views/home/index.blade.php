@@ -27,17 +27,17 @@
 
                 <!-- Botones de Acción Rápida con Enlaces Laravel Directos -->
                 <div class="flex flex-wrap items-center gap-3 pt-2">
-                    <a href="{{ route('reportes.create') }}" class="bg-rose-500 hover:bg-rose-600 text-white px-5 py-3 rounded-xl font-bold shadow-lg shadow-rose-900/20 transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
+                    <a href="{{ route('extraviados.index') }}" class="bg-rose-500 hover:bg-rose-600 text-white px-5 py-3 rounded-xl font-bold shadow-lg shadow-rose-900/20 transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
                         <i class="ph-bold ph-warning-circle text-xl"></i>
                         Reportar Extravío
                     </a>
                     
-                    <a href="{{ route('reportes.create') }}" class="bg-amber-500 hover:bg-amber-600 text-white px-5 py-3 rounded-xl font-bold shadow-lg shadow-amber-900/20 transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
+                    <a href="{{ route('avistamientos.index') }}" class="bg-amber-500 hover:bg-amber-600 text-white px-5 py-3 rounded-xl font-bold shadow-lg shadow-amber-900/20 transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
                         <i class="ph-bold ph-binoculars text-xl"></i>
                         Publicar Avistamiento
                     </a>
                     
-                    <a href="{{ route('index') }}" class="bg-white/10 hover:bg-white/20 border border-white/30 text-white backdrop-blur-md px-5 py-3 rounded-xl font-semibold transition-all flex items-center gap-2">
+                    <a href="{{ route('adopciones.index') }}" class="bg-white/10 hover:bg-white/20 border border-white/30 text-white backdrop-blur-md px-5 py-3 rounded-xl font-semibold transition-all flex items-center gap-2">
                         <i class="ph-bold ph-heart text-xl"></i>
                         Explorar Adopciones
                     </a>
@@ -48,7 +48,7 @@
         <!-- Tarjetas de Resumen (Widgets / Métricas Dinámicas) -->
         <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             <!-- Widget: Extravíos -->
-            <a href="{{ route('reportes.index') }}" class="bg-white p-5 rounded-2xl border border-rose-100 shadow-sm flex items-center justify-between hover:shadow-md transition-all group">
+            <a href="{{ route('extraviados.index') }}" class="bg-white p-5 rounded-2xl border border-rose-100 shadow-sm flex items-center justify-between hover:shadow-md transition-all group">
                 <div class="space-y-1">
                     <span class="text-xs font-semibold uppercase tracking-wider text-rose-500">Alertas Activas</span>
                     <h3 class="text-2xl font-black text-slate-800">{{ $extravios_count ?? 0 }} Extravíos</h3>
@@ -62,7 +62,7 @@
             </a>
             
             <!-- Widget: Avistamientos -->
-            <a href="{{ route('reportes.index') }}" class="bg-white p-5 rounded-2xl border border-amber-100 shadow-sm flex items-center justify-between hover:shadow-md transition-all group">
+            <a href="{{ route('avistamientos.index') }}" class="bg-white p-5 rounded-2xl border border-amber-100 shadow-sm flex items-center justify-between hover:shadow-md transition-all group">
                 <div class="space-y-1">
                     <span class="text-xs font-semibold uppercase tracking-wider text-amber-600">Comunidad</span>
                     <h3 class="text-2xl font-black text-slate-800">{{ $avistamientos_count ?? 0 }} Avistamientos</h3>
@@ -74,7 +74,7 @@
             </a>
 
             <!-- Widget: Adopciones -->
-            <a href="{{ route('index') }}" class="bg-white p-5 rounded-2xl border border-blue-100 shadow-sm flex items-center justify-between hover:shadow-md transition-all group">
+            <a href="{{ route('adopciones.index') }}" class="bg-white p-5 rounded-2xl border border-blue-100 shadow-sm flex items-center justify-between hover:shadow-md transition-all group">
                 <div class="space-y-1">
                     <span class="text-xs font-semibold uppercase tracking-wider text-blue-600">Nuevos Hogares</span>
                     <h3 class="text-2xl font-black text-slate-800">{{ $adopciones_count ?? 0 }} En Adopción</h3>
@@ -86,7 +86,7 @@
             </a>
             
             <!-- Widget: Reencuentros -->
-            <a href="{{ route('index') }}" class="bg-white p-5 rounded-2xl border border-emerald-100 shadow-sm flex items-center justify-between hover:shadow-md transition-all group">
+            <a href="{{ route('adopciones.index') }}" class="bg-white p-5 rounded-2xl border border-emerald-100 shadow-sm flex items-center justify-between hover:shadow-md transition-all group">
                 <div class="space-y-1">
                     <span class="text-xs font-semibold uppercase tracking-wider text-emerald-600">Éxito Comunitario</span>
                     <h3 class="text-2xl font-black text-slate-800">{{ $reencuentros_count ?? 0 }} Reencuentros</h3>
@@ -141,7 +141,7 @@
                         </h2>
                         <p class="text-xs text-slate-500">Mascotas perdidas reportadas recientemente</p>
                     </div>
-                    <a href="{{ route('reportes.index') }}" class="text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1">
+                    <a href="{{ route('extraviados.index') }}" class="text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1">
                         Ver todos los reportes <i class="ph-bold ph-caret-right"></i>
                     </a>
                 </div>
@@ -223,7 +223,7 @@
                                                 <i class="ph-bold ph-binoculars"></i>
                                                 Reportar Avistamiento
                                             </a>
-                                            <a href="{{ route('reportes.index') }}" class="bg-blue-50 hover:bg-blue-100 text-blue-700 py-2 px-3 rounded-xl font-bold text-xs transition-colors flex items-center gap-1.5">
+                                            <a href="{{ route('extraviados.index') }}" class="bg-blue-50 hover:bg-blue-100 text-blue-700 py-2 px-3 rounded-xl font-bold text-xs transition-colors flex items-center gap-1.5">
                                                 <i class="ph-bold ph-eye text-base"></i>
                                                 <span>Ver Detalle</span>
                                             </a>
@@ -283,7 +283,7 @@
                                         <i class="ph-bold ph-map-pin text-amber-500 flex-shrink-0"></i> 
                                         {{ $avistamiento->ubicacion_lat ?? 'Zona reportada' }}
                                     </span>
-                                    <a href="{{ route('reportes.index') }}" class="text-blue-600 font-bold hover:underline flex-shrink-0">Ver Detalle</a>
+                                    <a href="{{ route('avistamientos.index') }}" class="text-blue-600 font-bold hover:underline flex-shrink-0">Ver Detalle</a>
                                 </div>
                             </div>
                         @empty
@@ -327,7 +327,7 @@
                     </h2>
                     <p class="text-xs text-slate-500">Conoce a las mascotas listas para ser adoptadas</p>
                 </div>
-                <a href="{{ route('index') }}" class="text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1">
+                <a href="{{ route('adopciones.index') }}" class="text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1">
                     Ver catálogo completo <i class="ph-bold ph-caret-right"></i>
                 </a>
             </div>
