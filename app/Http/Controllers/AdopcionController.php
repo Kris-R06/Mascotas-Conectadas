@@ -103,14 +103,23 @@ class AdopcionController extends Controller
                     min(10, $lifestyleScore + 2)
                 ]);
 
-                // Filtro B: Espacio
+                // Filtro B: Espacio (Compatible con PostgreSQL y SQLite)
                 if ($request->has_yard == '0') {
-                    $query->where('space_needed', false);
+                    $query->where(function ($q) {
+                        $q->where('space_needed', '0')
+                          ->orWhere('space_needed', 'false')
+                          ->orWhere('space_needed', 'Espacio estándar')
+                          ->orWhereNull('space_needed');
+                    });
                 }
 
                 // Filtro C: Niños
                 if ($request->has_kids == '1') {
-                    $query->where('kid_friendly', true);
+                    $query->where(function ($q) {
+                        $q->where('kid_friendly', true)
+                          ->orWhere('kid_friendly', 1)
+                          ->orWhere('kid_friendly', '1');
+                    });
                 }
 
             })->with('mascota.especie')->latest()->get(); // Usa latest('fecha') si tu campo de fecha se llama así
