@@ -196,7 +196,7 @@
                                                 </h3>
                                                 @if(isset($reporte->mascota->edad))
                                                     <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-1 rounded-md">
-                                                        {{ $reporte->mascota->edad }} años
+                                                        {{ $reporte->mascota->edad }}
                                                     </span>
                                                 @endif
                                             </div>
@@ -283,7 +283,7 @@
                                         <i class="ph-bold ph-map-pin text-amber-500 flex-shrink-0"></i> 
                                         {{ $avistamiento->ubicacion_lat ?? 'Zona reportada' }}
                                     </span>
-                                    <a href="{{ route('avistamientos.index') }}" class="text-blue-600 font-bold hover:underline flex-shrink-0">Ver Detalle</a>
+                                    <a href="{{ route('avistamientos.show', $avistamiento->id) }}" class="text-blue-600 font-bold hover:underline flex-shrink-0">Ver Detalle</a>
                                 </div>
                             </div>
                         @empty
@@ -355,7 +355,7 @@
                             <div class="p-4 space-y-3">
                                 <div class="flex items-center justify-between">
                                     <h3 class="text-lg font-bold text-slate-800">{{ $mascota->nombre }}</h3>
-                                    <span class="text-xs font-medium text-slate-500">{{ $mascota->edad }} {{ $mascota->edad == 1 ? 'año' : 'años' }}</span>
+                                    <span class="text-xs font-medium text-slate-500">{{ $mascota->edad }}</span>
                                 </div>
                                 <p class="text-xs text-slate-600 line-clamp-2">
                                     {{ $mascota->descripcion }}

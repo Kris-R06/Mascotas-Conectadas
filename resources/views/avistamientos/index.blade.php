@@ -40,16 +40,6 @@
                 
                 @foreach($reportes as $reporte)
                     <div class="bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-blue-50 flex flex-col relative group">
-                        
-                        @if($reporte->mascota)
-                            <div class="absolute top-4 right-4 z-10 bg-emerald-500 text-white text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
-                                <i class="ph ph-check-circle"></i> Pista Vinculada
-                            </div>
-                        @else
-                            <div class="absolute top-4 right-4 z-10 bg-blue-500 text-white text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
-                                <i class="ph ph-question"></i> Desconocido
-                            </div>
-                        @endif
 
                         <div class="relative h-56 w-full bg-slate-50 overflow-hidden">
                             @if($reporte->foto)
@@ -85,9 +75,12 @@
                             </div>
 
                             <div class="mt-auto pt-4 border-t border-slate-50 flex items-center gap-2">
+                                <a href="{{ route('avistamientos.show', $reporte->id) }}" class="flex-1 flex justify-center items-center gap-2 bg-blue-50 hover:bg-blue-500 hover:text-white text-blue-700 font-bold py-2.5 px-3 rounded-xl transition-colors text-xs">
+                                    <i class="ph ph-magnifying-glass text-base"></i> Analizar pista
+                                </a>
                                 @if($reporte->user_id == auth()->id())
-                                    <a href="{{ route('avistamientos.edit', $reporte->id) }}" class="flex-1 flex justify-center items-center gap-1.5 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 font-bold py-2.5 px-3 rounded-xl transition-colors text-xs">
-                                        <i class="ph ph-pencil-simple text-base"></i> Editar
+                                    <a href="{{ route('avistamientos.edit', $reporte->id) }}" class="bg-amber-50 hover:bg-amber-500 hover:text-white text-amber-700 font-bold p-2.5 rounded-xl transition-colors text-xs" title="Editar Avistamiento">
+                                        <i class="ph ph-pencil-simple text-base"></i>
                                     </a>
                                     <form action="{{ route('avistamientos.destroy', $reporte->id) }}" method="POST" onsubmit="return confirm('¿Deseas eliminar este avistamiento?');">
                                         @csrf
@@ -96,10 +89,6 @@
                                             <i class="ph ph-trash text-base"></i>
                                         </button>
                                     </form>
-                                @else
-                                    <a href="#" class="w-full flex justify-center items-center gap-2 bg-blue-50 hover:bg-blue-500 hover:text-white text-blue-700 font-bold py-2.5 px-4 rounded-xl transition-colors text-sm">
-                                        <i class="ph ph-magnifying-glass text-lg"></i> Analizar pista
-                                    </a>
                                 @endif
                             </div>
                         </div>
