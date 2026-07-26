@@ -88,6 +88,20 @@
                             <p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Correo electrónico</p>
                             <p class="font-semibold text-slate-800">{{ $adopcion->mascota->user->email }}</p>
                         </div>
+
+                        <div class="flex flex-wrap gap-3 pt-2">
+                            <a href="{{ route('adopciones.edit', $adopcion) }}" class="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-full shadow-sm transition-colors w-[120px]">
+                                <i class="ph ph-pencil-simple"></i> Editar
+                            </a>
+
+                            <form action="{{ route('adopciones.destroy', $adopcion) }}" method="POST" onsubmit="return confirm('¿Deseas eliminar esta adopción?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 px-4 rounded-full shadow-sm transition-colors w-[120px]">
+                                    <i class="ph ph-trash"></i> Eliminar
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 @else
                     <div class="rounded-2xl border border-dashed border-blue-200 bg-white p-6 text-center text-blue-700">

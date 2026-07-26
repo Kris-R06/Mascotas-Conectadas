@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Adopcion;
 use App\Models\Mascota;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -56,7 +57,18 @@ class AdopcionController extends Controller
 
     public function edit(Adopcion $adopcion)
     {
-        return view('adopciones.edit', compact('adopcion'));
+        $adopcion->load(['mascota.especie']);
+
+        $mascotas = Mascota::query()
+            ->with('especie')
+            ->latest()
+            ->get();
+
+        $usuarios = User::query()
+            ->orderBy('name')
+            ->get();
+
+        return view('adopciones.edit', compact('adopcion', 'mascotas', 'usuarios'));
     }
 
     public function update(Request $request, Adopcion $adopcion)
