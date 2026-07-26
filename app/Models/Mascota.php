@@ -45,4 +45,14 @@ class Mascota extends Model
         return $this->hasMany(Adopcion::class);
     }
 
+    public function getFotoUrlAttribute(): string
+    {
+        if (!$this->foto) {
+            return asset('storage/mascotas/default.jpg');
+        }
+        if (\Illuminate\Support\Str::startsWith($this->foto, ['http://', 'https://'])) {
+            return $this->foto;
+        }
+        return asset('storage/' . $this->foto);
+    }
 }

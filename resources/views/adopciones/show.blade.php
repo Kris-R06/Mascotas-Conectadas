@@ -77,7 +77,7 @@
                 <div class="lg:col-span-2 bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden">
                     <div class="h-72 bg-slate-100 overflow-hidden">
                         @if($adopcion->mascota->foto)
-                            <img src="{{ asset('storage/' . $adopcion->mascota->foto) }}" alt="{{ $adopcion->mascota->nombre }}" class="w-full h-full object-cover">
+                            <img src="{{ $adopcion->mascota->foto_url }}" alt="{{ $adopcion->mascota->nombre }}" class="w-full h-full object-cover">
                         @else
                             <div class="w-full h-full flex items-center justify-center text-slate-400">
                                 <i class="ph ph-image text-6xl"></i>

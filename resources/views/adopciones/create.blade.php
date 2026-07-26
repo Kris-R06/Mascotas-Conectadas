@@ -83,7 +83,7 @@
                                     <div class="flex flex-col md:flex-row gap-4">
                                         <div class="w-full md:w-32 h-32 rounded-2xl bg-slate-200 overflow-hidden flex items-center justify-center">
                                             @if($mascota->foto)
-                                                <img src="{{ asset('storage/' . $mascota->foto) }}" alt="{{ $mascota->nombre }}" class="w-full h-full object-cover">
+                                                <img src="{{ $mascota->foto_url }}" alt="{{ $mascota->nombre }}" class="w-full h-full object-cover">
                                             @else
                                                 <i class="ph ph-image text-4xl text-slate-400"></i>
                                             @endif

@@ -43,4 +43,18 @@ class Reporte extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getFotoUrlAttribute(): string
+    {
+        if ($this->foto) {
+            if (\Illuminate\Support\Str::startsWith($this->foto, ['http://', 'https://'])) {
+                return $this->foto;
+            }
+            return asset('storage/' . $this->foto);
+        }
+        if ($this->mascota && $this->mascota->foto) {
+            return $this->mascota->foto_url;
+        }
+        return asset('storage/mascotas/default.jpg');
+    }
 }

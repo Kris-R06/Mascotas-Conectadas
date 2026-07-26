@@ -104,7 +104,7 @@
                     <label class="block text-sm font-bold text-slate-700 mb-1">Foto de la Mascota</label>
                     @if($mascota->foto)
                         <div class="flex items-center gap-4 mb-3">
-                            <img src="{{ asset('storage/' . $mascota->foto) }}" alt="Foto actual" class="w-16 h-16 object-cover rounded-lg border border-slate-200 shadow-sm">
+                            <img src="{{ $mascota->foto_url }}" alt="Foto actual" class="w-16 h-16 object-cover rounded-lg border border-slate-200 shadow-sm">
                             <span class="text-xs text-slate-500 italic">Si subes una nueva foto, reemplazará a la actual.</span>
                         </div>
                     @endif
