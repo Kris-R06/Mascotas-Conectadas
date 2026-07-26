@@ -49,8 +49,10 @@
                     <p class="font-medium text-slate-800">{{ $user->telefono }}</p>
                 </div>
                 <div>
-                    <p class="text-slate-500 mb-1">Tipo de usuario</p>
-                    <p class="font-medium text-slate-800">{{ $user->tipoUser->nombre ?? 'No definido' }}</p>
+                    @if(Auth::user()->tipo_user_id==2 || Auth::user()->tipo_user_id==3)
+                        <p class="text-slate-500 mb-1">Tipo de usuario</p>
+                        <p class="font-medium text-slate-800">{{ $user->tipo_user->nombre ?? 'No definido' }}</p>
+                    @endif
                 </div>
                 <div class="md:col-span-2">
                     <p class="text-slate-500 mb-1">Dirección</p>
