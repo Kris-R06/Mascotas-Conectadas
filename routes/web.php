@@ -40,6 +40,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/adopciones/{adopcion}', [AdopcionController::class, 'update'])->name('adopciones.update');
     Route::delete('/adopciones/destroy/{adopcion}', [AdopcionController::class, 'destroy'])->name('adopciones.destroy');
     Route::get('/adopciones/smart-match', [AdopcionController::class, 'smartMatch'])->name('adopciones.smart-match');
+    Route::post('/adopciones/{adopcion}/adoptar', [App\Http\Controllers\AdopcionController::class, 'adoptar'])->name('adopciones.adoptar');
 
     // Rutas de Especies
     Route::get('/especies', [EspecieController::class, 'index'])->name('especies.index');

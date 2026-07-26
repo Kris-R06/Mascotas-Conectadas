@@ -47,7 +47,15 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
             
             @foreach($adopciones as $adopcion)
-                @if($adopcion->mascota && $adopcion->estatus === 'pendiente')
+                @php
+                    $isOwnerOfPet = auth()->check() && $adopcion->mascota && $adopcion->mascota->user_id === auth()->id();
+                    $shouldShowCard = $adopcion->mascota && (
+                        in_array($adopcion->estatus, ['pendiente', 'en_revision'], true) ||
+                        ($isOwnerOfPet && in_array($adopcion->estatus, ['aprobada', 'adoptado'], true))
+                    );
+                @endphp
+
+                @if($shouldShowCard)
                     @php $hayAdopciones = true; @endphp
                     
                     <div class="bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-blue-50 flex flex-col relative group">
@@ -61,7 +69,7 @@
                             @endif
 
                             <div class="bg-blue-600 text-white text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-full shadow-lg">
-                                En adopción
+                                {{ $adopcion->estatus === 'en_revision' ? 'En Revisión' : (in_array($adopcion->estatus, ['aprobada', 'adoptado'], true) ? 'Adoptado' : 'En adopción') }}
                             </div>
 
                         </div>

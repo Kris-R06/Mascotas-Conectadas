@@ -6,7 +6,7 @@
         
         <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-6">
             <a href="{{ route('mascotas.index') }}" class="text-slate-500 hover:text-indigo-600 transition-colors flex items-center gap-2 font-semibold w-fit">
-                <i class="ph ph-arrow-left text-xl"></i> Volver a mi manada
+                <i class="ph ph-arrow-left text-xl"></i> Volver
             </a>
             <div class="flex flex-wrap gap-3">
                 <button onclick="openDeleteModal()" class="bg-red-50 hover:bg-red-100 text-red-600 font-bold py-2.5 px-5 rounded-xl border border-red-200 transition-colors flex items-center gap-2 text-sm">

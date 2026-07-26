@@ -25,6 +25,7 @@
                 <form action="{{ route('adopciones.update', $adopcion) }}" method="POST" class="space-y-5">
                     @csrf
                     @method('PUT')
+                    <input type="hidden" name="mascota_id" value="{{ $adopcion->mascota_id }}">
 
                     <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-2">Mascota asociada</label>
@@ -50,7 +51,7 @@
                         <label for="user_id" class="block text-sm font-semibold text-slate-700 mb-2">Adoptante</label>
                         <select name="user_id" id="user_id" class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-slate-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                             <option value="">Sin asignar aún</option>
-                            @foreach($usuarios as $usuario)
+                            @foreach($users as $usuario)
                                 <option value="{{ $usuario->id }}" {{ old('user_id', $adopcion->user_id) == $usuario->id ? 'selected' : '' }}>
                                     {{ $usuario->name }} ({{ $usuario->email }})
                                 </option>
