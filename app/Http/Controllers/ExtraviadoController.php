@@ -13,9 +13,14 @@ class ExtraviadoController extends Controller
      */
     public function index(Request $request)
     {
+        $tipoExtravio = \App\Models\TipoReporte::firstOrCreate(['nombre' => 'Extravío']);
+
         $query = Reporte::query()
             ->with(['tipo_reporte', 'mascota.especie', 'user'])
-            ->where('tipo_reporte_id', 1); // 1 = Extravío
+            ->where('tipo_reporte_id', $tipoExtravio->id)
+            ->whereHas('mascota', function ($q) {
+                $q->where('estatus', 'extraviado');
+            });
 
         if ($request->get('filter') === 'mis_publicaciones') {
             $query->where('user_id', auth()->id());
@@ -31,9 +36,15 @@ class ExtraviadoController extends Controller
      */
     public function create()
     {
+        $tipoExtravio = \App\Models\TipoReporte::firstOrCreate(['nombre' => 'Extravío']);
+
+        // Mostrar ÚNICAMENTE las mascotas del usuario con estatus 'extraviado' que no tengan reporte publicado
         $mascotas = Mascota::with('especie')
             ->where('user_id', auth()->id())
             ->where('estatus', 'extraviado')
+            ->whereDoesntHave('reportes', function ($q) use ($tipoExtravio) {
+                $q->where('tipo_reporte_id', $tipoExtravio->id);
+            })
             ->get();
 
         return view('extraviados.create', compact('mascotas'));
@@ -57,14 +68,29 @@ class ExtraviadoController extends Controller
         $tipoExtravio = \App\Models\TipoReporte::firstOrCreate(['nombre' => 'Extravío']);
         $data['tipo_reporte_id'] = $tipoExtravio->id;
 
+        // Impedir republicaciones duplicadas para una misma mascota
+        $existeReporte = Reporte::where('mascota_id', $data['mascota_id'])
+            ->where('tipo_reporte_id', $tipoExtravio->id)
+            ->exists();
+
+        if ($existeReporte) {
+            return back()->withErrors(['mascota_id' => 'Esta mascota ya cuenta con una alerta de extravío activa publicada.']);
+        }
+
+        $mascota = Mascota::find($data['mascota_id']);
+
         if ($request->hasFile('foto')) {
             $path = $request->file('foto')->store('reportes', 'public');
             $data['foto'] = $path;
         } elseif (is_string($request->foto) && !empty($request->foto)) {
             $data['foto'] = $request->foto;
         } else {
-            $mascota = Mascota::find($data['mascota_id']);
             $data['foto'] = $mascota->foto ?? 'mascotas/default.jpg';
+        }
+
+        // Actualizar automáticamente el estatus de la mascota a 'extraviado'
+        if ($mascota) {
+            $mascota->update(['estatus' => 'extraviado']);
         }
 
         Reporte::create($data);
