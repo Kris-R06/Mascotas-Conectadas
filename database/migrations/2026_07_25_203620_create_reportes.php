@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('reportes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tipo_reporte_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('mascota_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('mascota_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->date('fecha');
             $table->string('ubicacion_lat');

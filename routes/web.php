@@ -1,9 +1,10 @@
 <?php
 
 use App\Http\Controllers\AdopcionController;
+use App\Http\Controllers\AvistamientoController;
 use App\Http\Controllers\EspecieController;
+use App\Http\Controllers\ExtraviadoController;
 use App\Http\Controllers\MascotaController;
-use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\TipoReporteController;
 use App\Http\Controllers\TipoUserController;
 use Illuminate\Support\Facades\Route;
@@ -24,12 +25,12 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-    Route::get('/adopciones', [AdopcionController::class, 'index'])->name('index');
-    Route::get('/adopciones/create', [AdopcionController::class, 'create'])->name('create');
-    Route::post('/adopciones', [AdopcionController::class, 'store'])->name('store');
-    Route::get('/adopciones/edit/{adopcion}', [AdopcionController::class, 'edit'])->name('edit');
-    Route::put('/adopciones/{adopcion}', [AdopcionController::class, 'update'])->name('update');
-    Route::delete('/adopciones/destroy/{adopcion}', [AdopcionController::class, 'destroy'])->name('destroy');
+    Route::get('/adopciones', [AdopcionController::class, 'index'])->name('adopciones.index');
+    Route::get('/adopciones/create', [AdopcionController::class, 'create'])->name('adopciones.create');
+    Route::post('/adopciones', [AdopcionController::class, 'store'])->name('adopciones.store');
+    Route::get('/adopciones/edit/{adopcion}', [AdopcionController::class, 'edit'])->name('adopciones.edit');
+    Route::put('/adopciones/{adopcion}', [AdopcionController::class, 'update'])->name('adopciones.update');
+    Route::delete('/adopciones/destroy/{adopcion}', [AdopcionController::class, 'destroy'])->name('adopciones.destroy');
 
     // Rutas de Especies
     Route::get('/especies', [EspecieController::class, 'index'])->name('especies.index');
@@ -47,14 +48,21 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/mascotas/{mascota}', [MascotaController::class, 'update'])->name('mascotas.update');
     Route::delete('/mascotas/{mascota}', [MascotaController::class, 'destroy'])->name('mascotas.destroy');
 
-    // Rutas de Reportes
-    Route::get('/extraviados', [ReporteController::class, 'indexExtraviados'])->name('extraviados.index');
-    Route::get('/avistamientos', [ReporteController::class, 'indexAvistamientos'])->name('avistamientos.index');
-    Route::get('/reportes/create', [ReporteController::class, 'create'])->name('reportes.create');
-    Route::post('/reportes', [ReporteController::class, 'store'])->name('reportes.store');
-    Route::get('/reportes/{reporte}/edit', [ReporteController::class, 'edit'])->name('reportes.edit');
-    Route::put('/reportes/{reporte}', [ReporteController::class, 'update'])->name('reportes.update');
-    Route::delete('/reportes/{reporte}', [ReporteController::class, 'destroy'])->name('reportes.destroy');
+    // Rutas de Extraviados (ExtraviadoController)
+    Route::get('/extraviados', [ExtraviadoController::class, 'index'])->name('extraviados.index');
+    Route::get('/extraviados/create', [ExtraviadoController::class, 'create'])->name('extraviados.create');
+    Route::post('/extraviados', [ExtraviadoController::class, 'store'])->name('extraviados.store');
+    Route::get('/extraviados/{reporte}/edit', [ExtraviadoController::class, 'edit'])->name('extraviados.edit');
+    Route::put('/extraviados/{reporte}', [ExtraviadoController::class, 'update'])->name('extraviados.update');
+    Route::delete('/extraviados/{reporte}', [ExtraviadoController::class, 'destroy'])->name('extraviados.destroy');
+
+    // Rutas de Avistamientos (AvistamientoController)
+    Route::get('/avistamientos', [AvistamientoController::class, 'index'])->name('avistamientos.index');
+    Route::get('/avistamientos/create', [AvistamientoController::class, 'create'])->name('avistamientos.create');
+    Route::post('/avistamientos', [AvistamientoController::class, 'store'])->name('avistamientos.store');
+    Route::get('/avistamientos/{reporte}/edit', [AvistamientoController::class, 'edit'])->name('avistamientos.edit');
+    Route::put('/avistamientos/{reporte}', [AvistamientoController::class, 'update'])->name('avistamientos.update');
+    Route::delete('/avistamientos/{reporte}', [AvistamientoController::class, 'destroy'])->name('avistamientos.destroy');
 
     // Rutas de Tipo de Reportes
     Route::get('/tipo-reportes', [TipoReporteController::class, 'index'])->name('tipo-reportes.index');
@@ -77,4 +85,3 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/perfil/editar', [PerfilController::class, 'edit'])->name('perfil.edit');
     Route::patch('/perfil', [PerfilController::class, 'update'])->name('perfil.update');
 });
-

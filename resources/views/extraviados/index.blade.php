@@ -13,7 +13,7 @@
                 Revisa los reportes activos en la comunidad.
             </p>
         </div>
-        <a href="#" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full shadow-md hover:shadow-lg transition-all flex items-center gap-2 whitespace-nowrap">
+        <a href="{{ route('extraviados.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full shadow-md hover:shadow-lg transition-all flex items-center gap-2 whitespace-nowrap">
             <i class="ph ph-paw-print text-xl"></i> Reportar Mascota Extraviada
         </a>
     </div>
