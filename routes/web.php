@@ -72,6 +72,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/avistamientos', [AvistamientoController::class, 'index'])->name('avistamientos.index');
     Route::get('/avistamientos/create', [AvistamientoController::class, 'create'])->name('avistamientos.create');
     Route::post('/avistamientos', [AvistamientoController::class, 'store'])->name('avistamientos.store');
+    Route::get('/avistamientos/{reporte}', [AvistamientoController::class, 'show'])->name('avistamientos.show');
     Route::get('/avistamientos/{reporte}/edit', [AvistamientoController::class, 'edit'])->name('avistamientos.edit');
     Route::put('/avistamientos/{reporte}', [AvistamientoController::class, 'update'])->name('avistamientos.update');
     Route::delete('/avistamientos/{reporte}', [AvistamientoController::class, 'destroy'])->name('avistamientos.destroy');

@@ -32,6 +32,16 @@ class AvistamientoController extends Controller
     }
 
     /**
+     * Muestra el detalle / análisis de pista de un avistamiento.
+     */
+    public function show(Reporte $reporte)
+    {
+        $reporte->load(['mascota.especie', 'user', 'tipo_reporte']);
+
+        return view('avistamientos.show', compact('reporte'));
+    }
+
+    /**
      * Muestra el formulario para crear un nuevo avistamiento independiente.
      */
     public function create()
