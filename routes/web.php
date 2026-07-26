@@ -26,6 +26,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/adopciones', [AdopcionController::class, 'index'])->name('adopciones.index');
     Route::get('/adopciones/create', [AdopcionController::class, 'create'])->name('adopciones.create');
+    Route::get('/adopciones/{adopcion}', [AdopcionController::class, 'show'])->name('adopciones.show');
     Route::post('/adopciones', [AdopcionController::class, 'store'])->name('adopciones.store');
     Route::get('/adopciones/edit/{adopcion}', [AdopcionController::class, 'edit'])->name('adopciones.edit');
     Route::put('/adopciones/{adopcion}', [AdopcionController::class, 'update'])->name('adopciones.update');

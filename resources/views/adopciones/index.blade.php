@@ -33,9 +33,9 @@
                             En adopción
                         </div>
 
-                        <div class="relative h-56 w-full bg-slate-50 overflow-hidden">
+                        <div class="relative aspect-square w-full bg-slate-50 overflow-hidden">
                             @if($adopcion->mascota->foto)
-                                <img src="{{ asset('storage/' . $adopcion->mascota->foto) }}" alt="{{ $adopcion->mascota->nombre }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                <img src="{{ asset('storage/' . $adopcion->mascota->foto) }}" alt="{{ $adopcion->mascota->nombre }}" class="w-full h-full object-cover bg-slate-100 group-hover:scale-105 transition-transform duration-500">
                             @else
                                 <div class="w-full h-full flex flex-col items-center justify-center text-blue-300 bg-blue-50/30">
                                     <i class="ph ph-image-broken text-5xl mb-2"></i>
@@ -74,7 +74,7 @@
                             </div>
 
                             <div class="mt-auto pt-4 border-t border-slate-50">
-                                <a href="#" class="w-full flex justify-center items-center gap-2 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 font-bold py-2.5 px-4 rounded-xl transition-colors text-sm">
+                                <a href="{{ route('adopciones.show', $adopcion) }}" class="w-full flex justify-center items-center gap-2 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 font-bold py-2.5 px-4 rounded-xl transition-colors text-sm">
                                     <i class="ph ph-eye text-lg"></i> Ver detalles
                                 </a>
                             </div>
