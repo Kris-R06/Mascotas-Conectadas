@@ -9,11 +9,10 @@ sleep 3
 # Generar la clave de la aplicación si no existe
 #php artisan key:generate --force
 
-# Migraciones 
+# Migraciones, Seeders y Storage Link
 php artisan migrate --force
-php artisan db:seed
-composer require barryvdh/laravel-dompdf
-php artisan storage:link
+php artisan db:seed --force || true
+php artisan storage:link || true
 
 # cachear configuración
 php artisan config:clear
