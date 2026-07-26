@@ -81,8 +81,14 @@ class MascotaController extends Controller
 
     public function show($id)
     {
+        // Buscamos la mascota y cargamos su relación con especie
         $mascota = Mascota::with('especie')->findOrFail($id);
-        if ($mascota->user_id !== auth()->id()) {
+
+        if ($mascota->estatus === 'safe' && $mascota->user_id !== Auth::id()) {
+            abort(403, 'No tienes permiso para ver esta mascota adoptada.');
+        }
+
+        if ($mascota->user_id !== Auth::id()) {
             abort(403, 'No tienes permiso para ver esta mascota.');
         }
 
@@ -92,8 +98,8 @@ class MascotaController extends Controller
     public function edit($id)
     {
         $mascota = Mascota::findOrFail($id);
-        
-        if ($mascota->user_id !== auth()->id()) abort(403);
+        if ($mascota->user_id !== Auth::id()) abort(403);
+
         
         if (Especie::count() === 0) {
             Especie::firstOrCreate(['id' => 1], ['nombre' => 'Perro']);
@@ -106,7 +112,7 @@ class MascotaController extends Controller
 
     public function update(Request $request, Mascota $mascota)
     {
-        if ($mascota->user_id !== auth()->id()) {
+        if ($mascota->user_id !== Auth::id()) {
             abort(403, 'No tienes permiso para editar esta mascota.');
         }
 
@@ -149,7 +155,8 @@ class MascotaController extends Controller
     {
         $mascota = Mascota::findOrFail($id);
 
-        if ($mascota->user_id !== auth()->id()) {
+        // 1. Capa de Seguridad: Verificar que la mascota sea del usuario autenticado
+        if ($mascota->user_id !== Auth::id()) {
             abort(403, 'No tienes permiso para eliminar esta mascota.');
         }
 
