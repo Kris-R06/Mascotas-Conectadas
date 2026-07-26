@@ -22,6 +22,7 @@ Route::get('/', function () {
     Route::get('/extraviados', [ExtraviadoController::class, 'index'])->name('extraviados.index');
     Route::get('/avistamientos', [AvistamientoController::class, 'index'])->name('avistamientos.index');
     Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('/extraviados/{reporte}', [ExtraviadoController::class, 'show'])->name('extraviados.show');
 
 Route::middleware(['guest'])->group(function () {
     Route::get('/login', [AuthController::class, 'loginForm'])->name('login');
@@ -66,7 +67,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/extraviados/{reporte}/edit', [ExtraviadoController::class, 'edit'])->name('extraviados.edit');
     Route::put('/extraviados/{reporte}', [ExtraviadoController::class, 'update'])->name('extraviados.update');
     Route::delete('/extraviados/{reporte}', [ExtraviadoController::class, 'destroy'])->name('extraviados.destroy');
-    Route::get('/extraviados/{reporte}', [ExtraviadoController::class, 'show'])->name('extraviados.show');
+    
 
     // Rutas de Avistamientos (AvistamientoController)
     Route::get('/avistamientos', [AvistamientoController::class, 'index'])->name('avistamientos.index');
