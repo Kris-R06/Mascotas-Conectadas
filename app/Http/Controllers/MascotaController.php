@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Especie;
 use Illuminate\Support\Facades\Storage;
+use App\Services\CloudinaryService;
 
 class MascotaController extends Controller
 {
@@ -63,7 +64,7 @@ class MascotaController extends Controller
         $validated['energy_level'] = $request->input('energy_level', 5);
 
         if ($request->hasFile('foto')) {
-            $validated['foto'] = $request->file('foto')->store('mascotas', 'public');
+            $validated['foto'] = CloudinaryService::upload($request->file('foto'), 'mascotas');
         } else {
             $validated['foto'] = 'mascotas/default.jpg';
         }
@@ -139,10 +140,10 @@ class MascotaController extends Controller
         $validated['energy_level'] = $request->input('energy_level', $mascota->energy_level ?? 5);
 
         if ($request->hasFile('foto')) {
-            if ($mascota->foto && $mascota->foto !== 'mascotas/default.jpg') {
+            if ($mascota->foto && !Str::startsWith($mascota->foto, 'http') && $mascota->foto !== 'mascotas/default.jpg') {
                 Storage::disk('public')->delete($mascota->foto);
             }
-            $validated['foto'] = $request->file('foto')->store('mascotas', 'public');
+            $validated['foto'] = CloudinaryService::upload($request->file('foto'), 'mascotas');
         }
 
         $mascota->update($validated);

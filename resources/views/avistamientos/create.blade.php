@@ -90,7 +90,7 @@
                             <div id="mascota-list" class="max-h-56 overflow-y-auto space-y-2 rounded-xl border border-slate-100 bg-slate-50/50 p-2">
                                 @foreach($mascotas as $mascota)
                                     @php
-                                        $fotoUrl = $mascota->foto ? asset('storage/' . $mascota->foto) : null;
+                                        $fotoUrl = $mascota->foto_url;
                                         $isSelected = old('mascota_id') == $mascota->id;
                                     @endphp
                                     <label class="mascota-option-card flex items-center gap-3 p-2.5 rounded-lg border cursor-pointer transition-all {{ $isSelected ? 'border-amber-500 bg-amber-50 shadow-sm' : 'border-transparent bg-white hover:border-amber-200 hover:bg-amber-50/40' }}">

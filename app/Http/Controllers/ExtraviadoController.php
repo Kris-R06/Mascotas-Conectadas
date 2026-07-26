@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Reporte;
 use App\Models\Mascota;
 use Illuminate\Http\Request;
+use App\Services\CloudinaryService;
 
 class ExtraviadoController extends Controller
 {
@@ -80,8 +81,7 @@ class ExtraviadoController extends Controller
         $mascota = Mascota::find($data['mascota_id']);
 
         if ($request->hasFile('foto')) {
-            $path = $request->file('foto')->store('reportes', 'public');
-            $data['foto'] = $path;
+            $data['foto'] = CloudinaryService::upload($request->file('foto'), 'reportes');
         } elseif (is_string($request->foto) && !empty($request->foto)) {
             $data['foto'] = $request->foto;
         } else {
@@ -140,8 +140,7 @@ class ExtraviadoController extends Controller
         ]);
 
         if ($request->hasFile('foto')) {
-            $path = $request->file('foto')->store('reportes', 'public');
-            $data['foto'] = $path;
+            $data['foto'] = CloudinaryService::upload($request->file('foto'), 'reportes');
         }
 
         $reporte->update($data);

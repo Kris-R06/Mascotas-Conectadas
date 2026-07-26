@@ -80,7 +80,7 @@
 
                         <div class="relative aspect-square w-full bg-slate-50 overflow-hidden">
                             @if($adopcion->mascota->foto)
-                                <img src="{{ asset('storage/' . $adopcion->mascota->foto) }}" alt="{{ $adopcion->mascota->nombre }}" class="w-full h-full object-cover bg-slate-100 group-hover:scale-105 transition-transform duration-500">
+                                <img src="{{ $adopcion->mascota->foto_url }}" alt="{{ $adopcion->mascota->nombre }}" class="w-full h-full object-cover bg-slate-100 group-hover:scale-105 transition-transform duration-500">
                             @else
                                 <div class="w-full h-full flex flex-col items-center justify-center text-blue-300 bg-blue-50/30">
                                     <i class="ph ph-image-broken text-5xl mb-2"></i>

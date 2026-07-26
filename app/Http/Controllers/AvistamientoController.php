@@ -6,6 +6,7 @@ use App\Models\Reporte;
 use App\Models\Mascota;
 use Illuminate\Http\Request;
 use App\Models\Especie;
+use App\Services\CloudinaryService;
 
 class AvistamientoController extends Controller
 {
@@ -60,8 +61,7 @@ class AvistamientoController extends Controller
         $data['tipo_reporte_id'] = $tipoAvistamiento->id;
 
         if ($request->hasFile('foto')) {
-            $path = $request->file('foto')->store('avistamientos', 'public');
-            $data['foto'] = $path;
+            $data['foto'] = CloudinaryService::upload($request->file('foto'), 'avistamientos');
         } elseif (is_string($request->foto) && !empty($request->foto)) {
             $data['foto'] = $request->foto;
         } else {
@@ -102,8 +102,7 @@ class AvistamientoController extends Controller
         ]);
 
         if ($request->hasFile('foto')) {
-            $path = $request->file('foto')->store('avistamientos', 'public');
-            $data['foto'] = $path;
+            $data['foto'] = CloudinaryService::upload($request->file('foto'), 'avistamientos');
         }
 
         $reporte->update($data);

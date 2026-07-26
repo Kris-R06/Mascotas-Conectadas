@@ -35,7 +35,7 @@
 
                     <div class="relative h-56 w-full bg-slate-100 overflow-hidden">
                         @if($mascota->foto)
-                            <img src="{{ asset('storage/' . $mascota->foto) }}" alt="{{ $mascota->nombre }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <img src="{{ $mascota->foto_url }}" alt="{{ $mascota->nombre }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                         @else
                             <div class="w-full h-full flex flex-col items-center justify-center text-slate-300 bg-slate-50">
                                 <i class="ph ph-image-broken text-5xl mb-2"></i>

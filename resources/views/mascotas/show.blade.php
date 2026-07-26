@@ -77,7 +77,7 @@
 
                 <div class="h-80 md:h-full w-full">
                     @if($mascota->foto)
-                        <img src="{{ asset('storage/' . $mascota->foto) }}" alt="{{ $mascota->nombre }}" class="w-full h-full object-cover">
+                        <img src="{{ $mascota->foto_url }}" alt="{{ $mascota->nombre }}" class="w-full h-full object-cover">
                     @else
                         <div class="w-full h-full flex flex-col items-center justify-center text-slate-400 bg-slate-100">
                             <i class="ph ph-camera-slash text-6xl mb-3 text-slate-300"></i>
