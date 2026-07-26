@@ -23,7 +23,7 @@
                     <i class="ph-fill ph-house text-xl text-blue-600"></i>
                     Inicio
                 </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-blue-700 hover:bg-blue-50/70 rounded-lg font-medium transition-colors">
+                <a href="{{ route('adopciones.index') }}" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-blue-700 hover:bg-blue-50/70 rounded-lg font-medium transition-colors">
                     <i class="ph ph-heart text-xl"></i>
                     Adopciones
                 </a>
