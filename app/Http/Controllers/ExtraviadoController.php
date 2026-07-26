@@ -31,10 +31,10 @@ class ExtraviadoController extends Controller
      */
     public function create()
     {
-        $mascotas = Mascota::with('especie')->where('user_id', auth()->id())->get();
-        if ($mascotas->isEmpty()) {
-            $mascotas = Mascota::with('especie')->get();
-        }
+        $mascotas = Mascota::with('especie')
+            ->where('user_id', auth()->id())
+            ->where('estatus', 'extraviado')
+            ->get();
 
         return view('extraviados.create', compact('mascotas'));
     }
@@ -54,8 +54,8 @@ class ExtraviadoController extends Controller
             'foto' => ['nullable'],
         ]);
 
-        // Se asigna automáticamente el tipo_reporte_id = 1 (Extravío)
-        $data['tipo_reporte_id'] = 1;
+        $tipoExtravio = \App\Models\TipoReporte::firstOrCreate(['nombre' => 'Extravío']);
+        $data['tipo_reporte_id'] = $tipoExtravio->id;
 
         if ($request->hasFile('foto')) {
             $path = $request->file('foto')->store('reportes', 'public');
@@ -95,7 +95,7 @@ class ExtraviadoController extends Controller
      */
     public function edit(Reporte $reporte)
     {
-        $mascotas = Mascota::with('especie')->get();
+        $mascotas = Mascota::with('especie')->where('user_id', auth()->id())->get();
         return view('extraviados.edit', compact('reporte', 'mascotas'));
     }
 

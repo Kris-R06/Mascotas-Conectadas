@@ -253,6 +253,94 @@
                 });
         }
 
+        // Autocompletado predictivo en vivo al escribir la calle
+        if (searchInput && suggestionsList) {
+            var debounceTimer = null;
+
+            function hideSuggestions() {
+                suggestionsList.classList.add('hidden');
+                suggestionsList.innerHTML = '';
+            }
+
+            searchInput.addEventListener('input', function () {
+                var query = searchInput.value.trim();
+                clearTimeout(debounceTimer);
+
+                if (query.length < 2) {
+                    hideSuggestions();
+                    return;
+                }
+
+                debounceTimer = setTimeout(function () {
+                    var fullQuery = query;
+                    if (!fullQuery.toLowerCase().includes('matamoros')) {
+                        fullQuery += ', Matamoros, Tamaulipas, Mexico';
+                    }
+
+                    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fullQuery)}&countrycodes=mx&limit=6&addressdetails=1&accept-language=es`)
+                        .then(function (res) { return res.json(); })
+                        .then(function (data) {
+                            suggestionsList.innerHTML = '';
+                            if (!data || data.length === 0) {
+                                hideSuggestions();
+                                return;
+                            }
+
+                            data.forEach(function (item) {
+                                var li = document.createElement('li');
+                                li.className = 'px-4 py-3 hover:bg-blue-50 cursor-pointer flex items-center gap-2.5 text-xs text-slate-700 transition-colors border-b border-slate-100 last:border-0';
+                                
+                                var shortTitle = item.display_name.split(',').slice(0, 3).join(',').trim();
+                                li.innerHTML = `<i class="ph ph-map-pin text-blue-500 text-base flex-shrink-0"></i> <div><strong class="block text-slate-800 font-bold">${shortTitle}</strong><span class="text-[10px] text-slate-400 block">${item.display_name}</span></div>`;
+
+                                li.addEventListener('click', function () {
+                                    var lat = parseFloat(item.lat);
+                                    var lon = parseFloat(item.lon);
+                                    searchInput.value = shortTitle;
+                                    hideSuggestions();
+
+                                    map.setView([lat, lon], 16);
+                                    marker.setLatLng([lat, lon]);
+                                    updateInputs(lat, lon, shortTitle);
+                                });
+
+                                suggestionsList.appendChild(li);
+                            });
+
+                            suggestionsList.classList.remove('hidden');
+                        })
+                        .catch(function () { hideSuggestions(); });
+                }, 300);
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!searchInput.contains(e.target) && !suggestionsList.contains(e.target)) {
+                    hideSuggestions();
+                }
+            });
+        }
+
+        if (searchBtn && searchInput) {
+            searchBtn.addEventListener('click', function () {
+                var query = searchInput.value.trim();
+                if (!query) return;
+                if (!query.toLowerCase().includes('matamoros')) {
+                    query += ', Matamoros, Tamaulipas, Mexico';
+                }
+                fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=mx`)
+                    .then(function(res) { return res.json(); })
+                    .then(function(data) {
+                        if (data && data.length > 0) {
+                            var lat = parseFloat(data[0].lat);
+                            var lon = parseFloat(data[0].lon);
+                            map.setView([lat, lon], 15);
+                            marker.setLatLng([lat, lon]);
+                            updateInputs(lat, lon, data[0].display_name.split(',').slice(0, 3).join(',').trim());
+                        }
+                    });
+            });
+        }
+
         marker.on('dragend', function (e) {
             var pos = marker.getLatLng();
             reverseGeocode(pos.lat, pos.lng);

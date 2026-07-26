@@ -163,7 +163,7 @@
                         </tr>
                         <tr>
                             <td class="etiqueta">Edad aproximada</td>
-                            <td>{{ $mascota->edad }} años</td>
+                            <td>{{ $mascota->edad }}</td>
                         </tr>
                     </table>
                 </td>
